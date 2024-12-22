@@ -12,11 +12,9 @@ import ru.java.teamProject.SmartTaskFlow.dto.task.CreateTaskDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.task.TaskDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.task.UpdateTaskDTO;
 import ru.java.teamProject.SmartTaskFlow.entity.*;
-import ru.java.teamProject.SmartTaskFlow.entity.enums.Status;
 import ru.java.teamProject.SmartTaskFlow.repository.*;
 import ru.java.teamProject.SmartTaskFlow.service.abstr.TaskService;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

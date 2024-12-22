@@ -16,6 +16,7 @@ import java.util.NoSuchElementException;
 
 
 @Service
+@Transactional
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;

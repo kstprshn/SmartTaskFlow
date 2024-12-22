@@ -1,14 +1,13 @@
 package ru.java.teamProject.SmartTaskFlow.controller;
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.java.teamProject.SmartTaskFlow.dto.comment.CreateCommentDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.subtask.CreateSubTaskDTO;
-import ru.java.teamProject.SmartTaskFlow.dto.subtask.UpdateSubTaskDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.task.CreateTaskDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.task.TaskDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.task.UpdateTaskDTO;
@@ -19,11 +18,16 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/tasks")
-@RequiredArgsConstructor
 public class TaskController {
 
     private final TaskService taskService;
     private final SubtaskService subtaskService;
+
+    @Autowired
+    public TaskController(TaskService taskService, SubtaskService subtaskService) {
+        this.taskService = taskService;
+        this.subtaskService = subtaskService;
+    }
 
     @GetMapping("/columns/{columnId}/tasks")
     public ResponseEntity<List<TaskDTO>> getTasksInColumn(@PathVariable Long columnId) {

@@ -20,10 +20,7 @@ public interface TaskService {
     TaskDTO addCommentToTask(Long taskId, CreateCommentDTO commentDTO);
     TaskDTO createTask(Long panelId, String name, String priority, Integer orderIndex);
     TaskDTO assignUser(Long taskId, Long userId);
-
     List<TaskDTO> getArchivedTasks(String email);
-
-
     TaskDTO archiveTask(Long taskId);
     TaskDTO unArchiveTask(Long taskId);
 }

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.java.teamProject.SmartTaskFlow.dto.board.BoardDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.board.CreateBoardDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.board.UpdateBoardDTO;
-import ru.java.teamProject.SmartTaskFlow.service.BoardServiceImpl;
+import ru.java.teamProject.SmartTaskFlow.service.abstr.BoardService;
 
 import java.util.List;
 
@@ -16,10 +16,10 @@ import java.util.List;
 @RequestMapping("/api/boards")
 public class BoardController {
 
-    private final BoardServiceImpl boardService;
+    private final BoardService boardService;
 
     @Autowired
-    public BoardController(BoardServiceImpl boardService) {
+    public BoardController(BoardService boardService) {
         this.boardService = boardService;
     }
 

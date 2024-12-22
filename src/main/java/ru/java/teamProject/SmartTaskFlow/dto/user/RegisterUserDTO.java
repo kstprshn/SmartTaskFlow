@@ -18,7 +18,7 @@ public class RegisterUserDTO {
     private String email;
 
     @NotNull
-    @Size(min = 6, max = 20)
+    @Size(min = 8, max = 20)
     private String password;
 
     @NotNull
