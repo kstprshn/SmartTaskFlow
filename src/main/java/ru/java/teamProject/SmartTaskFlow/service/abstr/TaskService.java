@@ -1,9 +1,6 @@
 package ru.java.teamProject.SmartTaskFlow.service.abstr;
 
 import ru.java.teamProject.SmartTaskFlow.dto.comment.CreateCommentDTO;
-import ru.java.teamProject.SmartTaskFlow.dto.subtask.CreateSubTaskDTO;
-import ru.java.teamProject.SmartTaskFlow.dto.subtask.SubTaskDTO;
-import ru.java.teamProject.SmartTaskFlow.dto.subtask.UpdateSubTaskDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.task.CreateTaskDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.task.TaskDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.task.UpdateTaskDTO;
@@ -27,4 +24,5 @@ public interface TaskService {
     List<Task> getArchivedTasks();
     List<Task> getNonArchivedTasks();
     Task getArchivedTaskById(Long id);
+    Task getTaskById(Long id);
 }

@@ -19,5 +19,6 @@ public interface BoardService {
     List<Board> getArchivedBoards();
     List<Board> getNonArchivedBoards();
     Board getArchivedBoardById(Long id);
+    Board getBoardById(Long id);
 
 }

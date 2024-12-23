@@ -15,4 +15,5 @@ public interface PanelRepository extends JpaRepository<Panel, Long> {
     List<Panel> findAllByArchivedFalse();
 
     Optional<Panel> findByIdAndArchivedTrue(Long id);
+    Optional<Panel> findByIdAndArchivedFalse(Long id);
 }

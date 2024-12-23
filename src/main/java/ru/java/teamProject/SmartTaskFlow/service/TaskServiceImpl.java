@@ -209,4 +209,10 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.findByIdAndArchivedTrue(id)
                 .orElseThrow(() -> new EntityNotFoundException("Archived task not found"));
     }
+
+    @Override
+    public Task getTaskById(Long id) {
+        return taskRepository.findByIdAndArchivedFalse(id)
+                .orElseThrow(() -> new EntityNotFoundException("Task not found"));
+    }
 }

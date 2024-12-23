@@ -129,6 +129,12 @@ public class BoardServiceImpl implements BoardService {
         return boardRepository.findByIdAndArchivedTrue(id)
                 .orElseThrow(() -> new EntityNotFoundException("Archived board not found"));
     }
+
+    @Override
+    public Board getBoardById(Long id) {
+        return boardRepository.findByIdAndArchivedFalse(id)
+                .orElseThrow(() -> new EntityNotFoundException("Board not found"));
+    }
 }
 
 

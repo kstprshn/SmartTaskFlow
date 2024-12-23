@@ -17,5 +17,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Board> findAllByArchivedFalse();
 
     Optional<Board> findByIdAndArchivedTrue(Long id);
+    Optional<Board> findByIdAndArchivedFalse(Long id);
 
 }

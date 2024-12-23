@@ -115,6 +115,11 @@ public class TaskController {
     public ResponseEntity<Task> getArchivedTaskById(@PathVariable Long id) {
         return ResponseEntity.ok(taskService.getArchivedTaskById(id));
     }
+
+    @GetMapping("/getTask/{id}")
+    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
+        return ResponseEntity.ok(taskService.getTaskById(id));
+    }
 }
 
 

@@ -3,10 +3,8 @@ package ru.java.teamProject.SmartTaskFlow.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import ru.java.teamProject.SmartTaskFlow.dto.board.BoardDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.panel.CreatePanelDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.panel.PanelUpdateDTO;
 import ru.java.teamProject.SmartTaskFlow.entity.Panel;
@@ -29,13 +27,13 @@ public class PanelController {
 
     @GetMapping("/all")
     public ResponseEntity<List<Panel>> getAllPanels() {
-        List<Panel> panels = panelService.getAll();
+        List<Panel> panels = panelService.getNonArchivedPanels();
         return ResponseEntity.status(HttpStatus.OK).body(panels);
     }
 
     @GetMapping("/getPanel/{panelId}")
     public ResponseEntity<Panel> getPanel(@PathVariable Long panelId){
-        Panel panelById = panelService.getOnePanel(panelId);
+        Panel panelById = panelService.getPanelById(panelId);
         return new ResponseEntity<>(panelById, HttpStatus.OK);
     }
 
@@ -72,11 +70,6 @@ public class PanelController {
     @GetMapping("/archived")
     public ResponseEntity<List<Panel>> getArchivedPanels() {
         return ResponseEntity.ok(panelService.getArchivedPanels());
-    }
-
-    @GetMapping("/non-archived")
-    public ResponseEntity<List<Panel>> getNonArchivedPanels() {
-        return ResponseEntity.ok(panelService.getNonArchivedPanels());
     }
 
     @GetMapping("/archived/{id}")

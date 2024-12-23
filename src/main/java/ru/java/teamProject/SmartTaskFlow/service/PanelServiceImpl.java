@@ -46,17 +46,6 @@ public class PanelServiceImpl implements PanelService {
     }
 
     @Override
-    public List<Panel> getAll() {
-        return panelRepository.findAll();
-    }
-
-    @Override
-    public Panel getOnePanel(Long id) {
-        return panelRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("The panel is not found"));
-    }
-
-    @Override
     public Panel archivePanel(Long id) {
         Panel panel = panelRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Panel not found"));
@@ -88,5 +77,11 @@ public class PanelServiceImpl implements PanelService {
     public Panel getArchivedPanelById(Long id) {
         return panelRepository.findByIdAndArchivedTrue(id)
                 .orElseThrow(() -> new EntityNotFoundException("Archived panel not found"));
+    }
+
+    @Override
+    public Panel getPanelById(Long id) {
+        return panelRepository.findByIdAndArchivedFalse(id)
+                .orElseThrow(() -> new EntityNotFoundException("Panel not found"));
     }
 }

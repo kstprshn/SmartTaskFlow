@@ -11,11 +11,10 @@ import java.util.UUID;
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findByPanelId(Long panelId);
-
     List<Task> findAllByArchivedTrue();
-
     List<Task> findAllByArchivedFalse();
-
     Optional<Task> findByIdAndArchivedTrue(Long id);
+    Optional<Task> findByIdAndArchivedFalse(Long id);
+
 
 }

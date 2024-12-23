@@ -86,6 +86,10 @@ public class BoardController {
     public ResponseEntity<Board> getArchivedBoardById(@PathVariable Long id) {
         return ResponseEntity.ok(boardService.getArchivedBoardById(id));
     }
+    @GetMapping("/getBoard/{id}")
+    public ResponseEntity<Board> getBoardById(@PathVariable Long id) {
+        return ResponseEntity.ok(boardService.getBoardById(id));
+    }
 }
 
 

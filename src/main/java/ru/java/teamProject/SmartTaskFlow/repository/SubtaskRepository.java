@@ -15,4 +15,6 @@ public interface SubtaskRepository extends JpaRepository<Subtask, Long> {
     List<Subtask> findAllByArchivedFalse();
 
     Optional<Subtask> findByIdAndArchivedTrue(Long id);
+    Optional<Subtask> findByIdAndArchivedFalse(Long id);
+
 }
