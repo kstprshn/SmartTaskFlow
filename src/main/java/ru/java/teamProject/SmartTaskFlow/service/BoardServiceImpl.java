@@ -1,5 +1,6 @@
 package ru.java.teamProject.SmartTaskFlow.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -88,6 +89,45 @@ public class BoardServiceImpl implements BoardService {
         return boardRepository.findByMembersContaining(user)
                 .stream()
                 .map(this::buildDto).toList();
+    }
+
+    @Override
+    public BoardDTO findById(Long id){
+        Board foundedBoard =  boardRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("The board is not found"));
+        return buildDto(foundedBoard);
+    }
+
+    @Override
+    public Board archiveBoard(Long id) {
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Board not found"));
+
+        board.setArchived(true);
+        return boardRepository.save(board);
+    }
+
+    @Override
+    public Board unArchiveBoard(Long id) {
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Board not found"));
+
+        board.setArchived(false);
+        return boardRepository.save(board);
+    }
+    @Override
+    public List<Board> getArchivedBoards() {
+        return boardRepository.findAllByArchivedTrue();
+
+    }
+    @Override
+    public List<Board> getNonArchivedBoards() {
+        return boardRepository.findAllByArchivedFalse();
+    }
+    @Override
+    public Board getArchivedBoardById(Long id) {
+        return boardRepository.findByIdAndArchivedTrue(id)
+                .orElseThrow(() -> new EntityNotFoundException("Archived board not found"));
     }
 }
 

@@ -11,9 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.java.teamProject.SmartTaskFlow.dto.user.RegisterUserDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.user.UpdateProfileDTO;
 import ru.java.teamProject.SmartTaskFlow.entity.User;
-import ru.java.teamProject.SmartTaskFlow.entity.enums.RoleType;
+import ru.java.teamProject.SmartTaskFlow.jwt.JwtUtils;
 import ru.java.teamProject.SmartTaskFlow.repository.UserRepository;
 import ru.java.teamProject.SmartTaskFlow.service.abstr.UserService;
+
+import java.util.Collections;
+import java.util.Optional;
 
 
 @Service
@@ -22,9 +25,13 @@ import ru.java.teamProject.SmartTaskFlow.service.abstr.UserService;
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
+    private final JwtUtils jwtUtils;
     private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
     public void registerUser(RegisterUserDTO registerDTO) {
+        if (userRepository.existsByEmailIgnoreCase(registerDTO.getEmail())) {
+            throw new RuntimeException("Email is already in use");
+        }
         User user = new User();
         user.setEmail(registerDTO.getEmail());
         user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
@@ -34,16 +41,21 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userRepository.save(user);
     }
 
-    public boolean authenticateUser(String email, String password) {
-        User user = userRepository.findByEmail(email).orElse(null);
-        return user != null && passwordEncoder.matches(password, user.getPassword());
+    public String authenticateUser(String email, String password) {
+        User user = userRepository.findByEmail(email).
+                orElseThrow(() -> new RuntimeException("Invalid email or password"));
+        if (passwordEncoder.matches(password, user.getPassword())) {
+            return jwtUtils.generateToken(email);
+        }
+        throw new RuntimeException("Invalid email or password");
     }
 
     public void updateProfile(String email, UpdateProfileDTO profileDTO) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
-        user.setFirstName(profileDTO.getFirstName());
-        user.setLastName(profileDTO.getLastName());
-        user.setUsername(profileDTO.getUsername());
+        Optional.ofNullable(profileDTO.getFirstName()).ifPresent(user::setFirstName);
+        Optional.ofNullable(profileDTO.getLastName()).ifPresent(user::setLastName);
+        Optional.ofNullable(profileDTO.getUsername()).ifPresent(user::setUsername);
+
         if (profileDTO.getPassword() != null) {
             user.setPassword(passwordEncoder.encode(profileDTO.getPassword()));
         }
@@ -61,11 +73,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
-
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
                 user.getPassword(),
-                user.getRoles());
+                Collections.emptyList()
+        );
     }
 }

@@ -23,7 +23,8 @@ public class Panel {
     @Column(nullable = false)
     private String name;
 
-    private Boolean isArchived = false;
+    @Column(nullable = false)
+    private boolean archived = false;
 
     @ManyToOne
     @JoinColumn(name = "board_id")

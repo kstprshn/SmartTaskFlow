@@ -1,5 +1,6 @@
 package ru.java.teamProject.SmartTaskFlow.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.java.teamProject.SmartTaskFlow.entity.Board;
@@ -8,6 +9,7 @@ import ru.java.teamProject.SmartTaskFlow.repository.BoardRepository;
 import ru.java.teamProject.SmartTaskFlow.repository.PanelRepository;
 import ru.java.teamProject.SmartTaskFlow.service.abstr.PanelService;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -23,7 +25,8 @@ public class PanelServiceImpl implements PanelService {
     }
 
     public Panel createPanel(Long boardId, String name, Integer orderIndex) {
-        Board board = boardRepository.findById(boardId).orElseThrow(() -> new NoSuchElementException("Board not found"));
+        Board board = boardRepository.findById(boardId).orElseThrow(
+                () -> new IllegalArgumentException("Board not found"));
         Panel panel = new Panel();
         panel.setName(name);
         panel.setOrderIndex(orderIndex);
@@ -32,12 +35,58 @@ public class PanelServiceImpl implements PanelService {
     }
 
     public Panel updatePanel(Long panelId, String newName) {
-        Panel panel = panelRepository.findById(panelId).orElseThrow(() -> new NoSuchElementException("Panel not found"));
+        Panel panel = panelRepository.findById(panelId).orElseThrow(
+                () -> new NoSuchElementException("Panel not found"));
         panel.setName(newName);
         return panelRepository.save(panel);
     }
 
     public void deletePanel(Long panelId) {
         panelRepository.deleteById(panelId);
+    }
+
+    @Override
+    public List<Panel> getAll() {
+        return panelRepository.findAll();
+    }
+
+    @Override
+    public Panel getOnePanel(Long id) {
+        return panelRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("The panel is not found"));
+    }
+
+    @Override
+    public Panel archivePanel(Long id) {
+        Panel panel = panelRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Panel not found"));
+
+        panel.setArchived(true);
+        return panelRepository.save(panel);
+    }
+
+    @Override
+    public Panel unArchivePanel(Long id) {
+        Panel panel = panelRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Panel not found"));
+
+        panel.setArchived(false);
+        return panelRepository.save(panel);
+    }
+
+    @Override
+    public List<Panel> getArchivedPanels() {
+        return panelRepository.findAllByArchivedTrue();
+    }
+
+    @Override
+    public List<Panel> getNonArchivedPanels() {
+        return panelRepository.findAllByArchivedFalse();
+    }
+
+    @Override
+    public Panel getArchivedPanelById(Long id) {
+        return panelRepository.findByIdAndArchivedTrue(id)
+                .orElseThrow(() -> new EntityNotFoundException("Archived panel not found"));
     }
 }

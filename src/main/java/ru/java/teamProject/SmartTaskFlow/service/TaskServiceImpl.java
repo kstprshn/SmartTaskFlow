@@ -194,7 +194,19 @@ public class TaskServiceImpl implements TaskService {
         taskRepository.save(task);
 
         return buildTaskDto(task);
-
     }
 
+    @Override
+    public List<Task> getArchivedTasks() {
+        return taskRepository.findAllByArchivedTrue();
+    }
+    @Override
+    public List<Task> getNonArchivedTasks() {
+        return taskRepository.findAllByArchivedFalse();
+    }
+    @Override
+    public Task getArchivedTaskById(Long id) {
+        return taskRepository.findByIdAndArchivedTrue(id)
+                .orElseThrow(() -> new EntityNotFoundException("Archived task not found"));
+    }
 }

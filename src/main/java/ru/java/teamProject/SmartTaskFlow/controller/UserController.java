@@ -2,6 +2,7 @@ package ru.java.teamProject.SmartTaskFlow.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
@@ -10,6 +11,8 @@ import ru.java.teamProject.SmartTaskFlow.dto.user.LoginDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.user.RegisterUserDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.user.UpdateProfileDTO;
 import ru.java.teamProject.SmartTaskFlow.service.abstr.UserService;
+
+import java.util.Collections;
 
 
 @RestController
@@ -37,12 +40,14 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@Valid @RequestBody LoginDTO loginDTO) {
-        boolean authenticated = userService.authenticateUser(loginDTO.getEmail(), loginDTO.getPassword());
-        if (!authenticated) {
-            return ResponseEntity.status(401).body("Invalid email or password.");
+        try {
+            String token = userService.authenticateUser(loginDTO.getEmail(), loginDTO.getPassword());
+            return ResponseEntity.ok(Collections.singletonMap("token", token));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
-        return ResponseEntity.ok("Login successful.");
     }
+
 
     @PutMapping("/profile")
     public ResponseEntity<?> updateProfile(Authentication authentication, @Valid @RequestBody UpdateProfileDTO profileDTO) {

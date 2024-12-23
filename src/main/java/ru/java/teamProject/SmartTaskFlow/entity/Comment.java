@@ -22,6 +22,10 @@ public class Comment {
     @Column(nullable = false)
     private String content;
 
+    @Column(nullable = false)
+    private LocalDateTime createdDate;
+
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
@@ -31,8 +35,4 @@ public class Comment {
     @JoinColumn(name = "task_id", nullable = false)
     @JsonIgnore
     private Task task;
-
-    @Column(nullable = false)
-    private LocalDateTime createdDate;
-
 }

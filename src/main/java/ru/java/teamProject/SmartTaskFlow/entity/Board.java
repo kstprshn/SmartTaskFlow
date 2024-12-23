@@ -23,6 +23,7 @@ public class Board {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private Boolean archived = false;
 
     @ManyToMany

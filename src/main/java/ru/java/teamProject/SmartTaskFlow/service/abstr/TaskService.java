@@ -7,6 +7,7 @@ import ru.java.teamProject.SmartTaskFlow.dto.subtask.UpdateSubTaskDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.task.CreateTaskDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.task.TaskDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.task.UpdateTaskDTO;
+import ru.java.teamProject.SmartTaskFlow.entity.Task;
 
 import java.util.List;
 
@@ -23,4 +24,7 @@ public interface TaskService {
     List<TaskDTO> getArchivedTasks(String email);
     TaskDTO archiveTask(Long taskId);
     TaskDTO unArchiveTask(Long taskId);
+    List<Task> getArchivedTasks();
+    List<Task> getNonArchivedTasks();
+    Task getArchivedTaskById(Long id);
 }

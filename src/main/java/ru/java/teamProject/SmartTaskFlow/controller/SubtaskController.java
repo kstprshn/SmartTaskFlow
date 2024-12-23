@@ -8,6 +8,8 @@ import ru.java.teamProject.SmartTaskFlow.dto.subtask.CreateSubTaskDTO;
 import ru.java.teamProject.SmartTaskFlow.entity.Subtask;
 import ru.java.teamProject.SmartTaskFlow.service.abstr.SubtaskService;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/subtasks")
@@ -20,7 +22,7 @@ public class SubtaskController {
         this.subtaskService = subtaskService;
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<Subtask> createSubtask(@RequestBody CreateSubTaskDTO request) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -37,5 +39,31 @@ public class SubtaskController {
     public ResponseEntity<Void> deleteSubtask(@PathVariable Long subtaskId) {
         subtaskService.deleteSubtask(subtaskId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/archive")
+    public ResponseEntity<Subtask> archiveSubtask(@PathVariable Long id) {
+        Subtask archivedSubtask = subtaskService.archiveSubtask(id);
+        return ResponseEntity.ok(archivedSubtask);
+    }
+
+    @PatchMapping("/{id}/unarchive")
+    public ResponseEntity<Subtask> unArchiveSubtask(@PathVariable Long id) {
+        Subtask unArchivedSubtask = subtaskService.unArchiveSubtask(id);
+        return ResponseEntity.ok(unArchivedSubtask);
+    }
+    @GetMapping("/archived")
+    public ResponseEntity<List<Subtask>> getArchivedSubtasks() {
+        return ResponseEntity.ok(subtaskService.getArchivedSubtasks());
+    }
+
+    @GetMapping("/non-archived")
+    public ResponseEntity<List<Subtask>> getNonArchivedSubtasks() {
+        return ResponseEntity.ok(subtaskService.getNonArchivedSubtasks());
+    }
+
+    @GetMapping("/archived/{id}")
+    public ResponseEntity<Subtask> getArchivedSubtaskById(@PathVariable Long id) {
+        return ResponseEntity.ok(subtaskService.getArchivedSubtaskById(id));
     }
 }

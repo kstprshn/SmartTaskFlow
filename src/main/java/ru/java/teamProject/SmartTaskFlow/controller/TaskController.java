@@ -11,6 +11,7 @@ import ru.java.teamProject.SmartTaskFlow.dto.subtask.CreateSubTaskDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.task.CreateTaskDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.task.TaskDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.task.UpdateTaskDTO;
+import ru.java.teamProject.SmartTaskFlow.entity.Task;
 import ru.java.teamProject.SmartTaskFlow.service.abstr.SubtaskService;
 import ru.java.teamProject.SmartTaskFlow.service.abstr.TaskService;
 
@@ -85,12 +86,12 @@ public class TaskController {
     }
 
 
-    @PostMapping("/{taskId}/archive")
+    @PatchMapping("/{taskId}/archive")
     public ResponseEntity<?> archiveTask(@PathVariable Long taskId) {
         return ResponseEntity.ok(taskService.archiveTask(taskId));
     }
 
-    @PostMapping("/{taskId}/unarchive")
+    @PatchMapping ("/{taskId}/unarchive")
     public ResponseEntity<?> unArchiveTask(@PathVariable Long taskId) {
         return ResponseEntity.ok(taskService.unArchiveTask(taskId));
     }
@@ -99,6 +100,20 @@ public class TaskController {
     public ResponseEntity<?> getArchivedTasks(Authentication authentication) {
         String email = authentication.getName();
         return ResponseEntity.ok(taskService.getArchivedTasks(email));
+    }
+    @GetMapping("/archived")
+    public ResponseEntity<List<Task>> getArchivedTasks() {
+        return ResponseEntity.ok(taskService.getArchivedTasks());
+    }
+
+    @GetMapping("/non-archived")
+    public ResponseEntity<List<Task>> getNonArchivedTasks() {
+        return ResponseEntity.ok(taskService.getNonArchivedTasks());
+    }
+
+    @GetMapping("/archived/{id}")
+    public ResponseEntity<Task> getArchivedTaskById(@PathVariable Long id) {
+        return ResponseEntity.ok(taskService.getArchivedTaskById(id));
     }
 }
 

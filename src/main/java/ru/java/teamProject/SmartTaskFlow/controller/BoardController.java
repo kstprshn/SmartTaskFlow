@@ -2,12 +2,14 @@ package ru.java.teamProject.SmartTaskFlow.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.java.teamProject.SmartTaskFlow.dto.board.BoardDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.board.CreateBoardDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.board.UpdateBoardDTO;
+import ru.java.teamProject.SmartTaskFlow.entity.Board;
 import ru.java.teamProject.SmartTaskFlow.service.abstr.BoardService;
 
 import java.util.List;
@@ -45,11 +47,44 @@ public class BoardController {
         return ResponseEntity.ok(boardService.addMember(boardId, userId));
     }
 
-    @GetMapping
-    public ResponseEntity<?> getAllBoards(Authentication authentication) {
+    @GetMapping("/all")
+    public ResponseEntity<List<BoardDTO>> getAllBoards(Authentication authentication) {
         String email = authentication.getName();
         List<BoardDTO> boards = boardService.getAllBoards(email);
         return ResponseEntity.ok(boards);
+    }
+
+    @GetMapping("/getBoard/{boardId}")
+    public ResponseEntity<BoardDTO> getBoard(@PathVariable Long boardId){
+        BoardDTO boardById = boardService.findById(boardId);
+        return new ResponseEntity<>(boardById, HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}/archive")
+    public ResponseEntity<Board> archiveBoard(@PathVariable Long id) {
+        Board archivedBoard = boardService.archiveBoard(id);
+        return ResponseEntity.ok(archivedBoard);
+    }
+
+    @PatchMapping("/{id}/unarchive")
+    public ResponseEntity<Board> unArchiveBoard(@PathVariable Long id) {
+        Board unArchivedBoard = boardService.unArchiveBoard(id);
+        return ResponseEntity.ok(unArchivedBoard);
+    }
+
+    @GetMapping("/archived")
+    public ResponseEntity<List<Board>> getArchivedBoards() {
+        return ResponseEntity.ok(boardService.getArchivedBoards());
+    }
+
+    @GetMapping("/non-archived")
+    public ResponseEntity<List<Board>> getNonArchivedBoards() {
+        return ResponseEntity.ok(boardService.getNonArchivedBoards());
+    }
+
+    @GetMapping("/archived/{id}")
+    public ResponseEntity<Board> getArchivedBoardById(@PathVariable Long id) {
+        return ResponseEntity.ok(boardService.getArchivedBoardById(id));
     }
 }
 
