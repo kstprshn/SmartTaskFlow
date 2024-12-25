@@ -8,6 +8,7 @@ import ru.java.teamProject.SmartTaskFlow.dto.board.BoardDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.board.BoardPreviewDto;
 import ru.java.teamProject.SmartTaskFlow.dto.board.CreateBoardDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.board.UpdateBoardDTO;
+import ru.java.teamProject.SmartTaskFlow.dto.user.UserPreviewDTO;
 import ru.java.teamProject.SmartTaskFlow.entity.Board;
 import ru.java.teamProject.SmartTaskFlow.entity.User;
 import ru.java.teamProject.SmartTaskFlow.repository.BoardRepository;
@@ -101,13 +102,6 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public BoardDTO findById(Long id){
-        Board foundedBoard =  boardRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("The board is not found"));
-        return buildDto(foundedBoard);
-    }
-
-    @Override
     public Board archiveBoard(Long id) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Board not found"));
@@ -145,9 +139,20 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public Board getBoardById(Long id) {
+    public Board findBoardById(Long id) {
         return boardRepository.findByIdAndArchivedFalse(id)
                 .orElseThrow(() -> new EntityNotFoundException("Board not found"));
+    }
+
+    @Override
+    public List<UserPreviewDTO> getUsersInBoard(Long boardId) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new IllegalArgumentException("Board not found"));
+        return board.getMembers()
+                .stream()
+                .map(user -> new UserPreviewDTO()
+                        .setFirstName(user.getFirstName()))
+                .collect(Collectors.toList());
     }
 }
 

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.java.teamProject.SmartTaskFlow.dto.user.RegisterUserDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.user.UpdateProfileDTO;
+import ru.java.teamProject.SmartTaskFlow.dto.user.UserResponseDTO;
 import ru.java.teamProject.SmartTaskFlow.entity.User;
 import ru.java.teamProject.SmartTaskFlow.jwt.JwtUtils;
 import ru.java.teamProject.SmartTaskFlow.repository.UserRepository;
@@ -27,6 +28,28 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
     private final JwtUtils jwtUtils;
     private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+
+
+    private UserResponseDTO buildUserResponse(User user) {
+        return new UserResponseDTO()
+                .setFirstName(user.getFirstName())
+                .setLastName(user.getLastName())
+                .setEmail(user.getEmail())
+                .setUsername(user.getUsername());
+    }
+    @Override
+    public UserResponseDTO getUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        return buildUserResponse(user);
+    }
+
+    @Override
+    public UserResponseDTO getUserByEmailOrUsername(String identifier) {
+        User user = userRepository.findByUsernameOrEmailIgnoreCase(identifier, identifier)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        return buildUserResponse(user);
+    }
 
     public void registerUser(RegisterUserDTO registerDTO) {
         if (userRepository.existsByEmailIgnoreCase(registerDTO.getEmail())) {

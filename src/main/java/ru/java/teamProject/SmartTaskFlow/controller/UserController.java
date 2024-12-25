@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.java.teamProject.SmartTaskFlow.dto.user.LoginDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.user.RegisterUserDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.user.UpdateProfileDTO;
+import ru.java.teamProject.SmartTaskFlow.dto.user.UserResponseDTO;
 import ru.java.teamProject.SmartTaskFlow.service.abstr.UserService;
 
 import java.util.Collections;
@@ -26,6 +27,15 @@ public class UserController {
         this.userService = userService;
     }
 
+    @GetMapping("/{id}/getUser")
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserById(id));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<UserResponseDTO> getUserByEmailOrUsername(@Valid @RequestBody String identifier) {
+        return ResponseEntity.ok(userService.getUserByEmailOrUsername(identifier));
+    }
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterUserDTO registerDTO, BindingResult result) {
         if (result.hasErrors()) {
@@ -61,7 +71,7 @@ public class UserController {
         return ResponseEntity.ok("Logout successful.");
     }
 
-    @DeleteMapping("/{userId}")
+    @DeleteMapping("/{userId}/remove")
     public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
         userService.deleteUser(userId);
         return ResponseEntity.ok("User deleted successfully.");

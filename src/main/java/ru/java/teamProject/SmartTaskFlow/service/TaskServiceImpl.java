@@ -1,29 +1,31 @@
 package ru.java.teamProject.SmartTaskFlow.service;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.java.teamProject.SmartTaskFlow.dto.task.CreateTaskDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.task.TaskDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.task.UpdateTaskDTO;
+import ru.java.teamProject.SmartTaskFlow.dto.user.UserPreviewDTO;
 import ru.java.teamProject.SmartTaskFlow.entity.*;
 import ru.java.teamProject.SmartTaskFlow.repository.*;
 import ru.java.teamProject.SmartTaskFlow.service.abstr.TaskService;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 @Transactional
 public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final PanelRepository panelRepository;
     private final UserRepository userRepository;
-
 
     private TaskDTO buildTaskDto(Task task) {
         return new TaskDTO()
@@ -36,11 +38,11 @@ public class TaskServiceImpl implements TaskService {
                 .setPanelId(task.getPanel().getId());
     }
 
-    public TaskServiceImpl(TaskRepository taskRepository, PanelRepository panelRepository, UserRepository userRepository) {
-        this.taskRepository = taskRepository;
-        this.panelRepository = panelRepository;
-        this.userRepository = userRepository;
+    private UserPreviewDTO buildPreviewDto(User user){  //нужен, тк по схеме олега должны выводиться только названия задач
+        return new UserPreviewDTO()
+                .setFirstName(user.getFirstName());
     }
+
 
     @Override
     public List<TaskDTO> getTasksInColumn(Long columnId) {
@@ -51,35 +53,36 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDTO addTaskToColumn(Long panelId, CreateTaskDTO taskDTO) {
-        log.info("Adding task to column ID: {}", panelId);
-        Panel panel = panelRepository.findById(panelId)
-                .orElseThrow(() -> new IllegalArgumentException("Column not found"));
-        Task task = new Task();
-        task.setName(taskDTO.getName());
-        task.setPriority(taskDTO.getPriority());
-        task.setOrderIndex(taskDTO.getOrderIndex());
-        task.setPanel(panel);
-        taskRepository.save(task);
-        return null;
-    }
+    public TaskDTO createTask(Long panelId,CreateTaskDTO createTaskDTO) {
 
+        log.info("Creating task in panel ID: {}", panelId);
+        Panel panel = panelRepository.findById(panelId)
+                .orElseThrow(() -> new IllegalArgumentException("Panel not found"));
+
+        Task task = new Task();
+        task.setName(createTaskDTO.getName());
+        task.setPriority(createTaskDTO.getPriority());
+        task.setOrderIndex(createTaskDTO.getOrderIndex());
+        task.setPanel(panel);
+        task.setStartDate(createTaskDTO.getStartDate());
+        task.setEndDate(createTaskDTO.getEndDate());
+
+        taskRepository.save(task);
+        return buildTaskDto(task);
+    }
     @Override
     public TaskDTO updateTask(Long taskId, UpdateTaskDTO taskDTO) {
         log.info("Updating task with ID: {}", taskId);
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("Task not found"));
-        if (taskDTO.getName() != null) {
-            task.setName(taskDTO.getName());
-        }
-        if (taskDTO.getPriority() != null) {
-            task.setPriority(taskDTO.getPriority());
-        }
-        if (taskDTO.getOrderIndex() != null) {
-            task.setOrderIndex(taskDTO.getOrderIndex()); СДЕЛАТЬ ЧЕРЕЗ OPTIONAL ВМЕСТО КУЧИ IF
-        }
-        taskRepository.save(task);
 
+        Optional.ofNullable(taskDTO.getName()).ifPresent(task::setName);
+        Optional.ofNullable(taskDTO.getPriority()).ifPresent(task::setPriority);
+        Optional.ofNullable(taskDTO.getOrderIndex()).ifPresent(task::setOrderIndex);
+        Optional.ofNullable(taskDTO.getStartDate()).ifPresent(task::setStartDate);
+        Optional.ofNullable(taskDTO.getEndDate()).ifPresent(task::setEndDate);
+
+        taskRepository.save(task);
         return buildTaskDto(task);
     }
 
@@ -107,43 +110,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskDTO> getArchivedTasks(String email) {
-        log.info("Fetching archived tasks for user: {}", email);
-
-        return new ArrayList<>();
-//        return taskRepository.findByCreatorEmailAndArchived(email, true)
-//                .stream()
-//                .map(task -> {
-//                    TaskDTO taskDTO = new TaskDTO();
-//                    taskDTO.setId(task.getId());
-//                    taskDTO.setName(task.getName());
-//                    taskDTO.setArchived(true);
-//                    return taskDTO;
-//                })
-//                .toList();
-    }
-
-    @Override
-    public TaskDTO createTask(Long panelId, String name, String priority, Integer orderIndex) {
-        log.info("Creating task in panel ID: {}", panelId);
-
-        // Найти панель по ID
-        Panel panel = panelRepository.findById(panelId)
-                .orElseThrow(() -> new IllegalArgumentException("Panel not found"));
-
-        // Создать задачу и заполнить поля
-        Task task = new Task();
-        task.setName(name);
-        task.setPriority(priority);
-        task.setOrderIndex(orderIndex);
-        task.setPanel(panel);
-
-        taskRepository.save(task);
-        return buildTaskDto(task);
-    }
-
-    @Override
-    public TaskDTO assignUser(Long taskId, Long userId) {
+    public TaskDTO assignUser(Long taskId, Long userId) { Это точно надо, вопрос для чего
         log.info("Assigning user ID: {} to task ID: {}", userId, taskId);
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("Task not found"));
@@ -197,4 +164,16 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.findByIdAndArchivedFalse(id)
                 .orElseThrow(() -> new EntityNotFoundException("Task not found"));
     }
+
+    @Override
+    public List<UserPreviewDTO> getUsersInTask(Long taskId) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new IllegalArgumentException("Task not found"));
+        return task.getAssignees()
+                .stream()
+                .map(user -> new UserPreviewDTO()
+                        .setFirstName(user.getFirstName()))
+                .collect(Collectors.toList());
+    }
+
 }

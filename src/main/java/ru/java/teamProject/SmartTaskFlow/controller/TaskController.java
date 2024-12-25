@@ -4,12 +4,12 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.java.teamProject.SmartTaskFlow.dto.subtask.CreateSubTaskDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.task.CreateTaskDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.task.TaskDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.task.UpdateTaskDTO;
+import ru.java.teamProject.SmartTaskFlow.dto.user.UserPreviewDTO;
 import ru.java.teamProject.SmartTaskFlow.entity.Task;
 import ru.java.teamProject.SmartTaskFlow.service.abstr.SubtaskService;
 import ru.java.teamProject.SmartTaskFlow.service.abstr.TaskService;
@@ -34,20 +34,28 @@ public class TaskController {
         return ResponseEntity.ok(taskService.getTasksInColumn(columnId));
     }
 
-    @PostMapping("/columns/{columnId}/tasks")
-    public ResponseEntity<?> addTaskToColumn(@PathVariable Long columnId, @Valid @RequestBody CreateTaskDTO taskDTO) {
-        return ResponseEntity.ok(taskService.addTaskToColumn(columnId, taskDTO));
+    @PostMapping("/{panelId}/addTask")
+    public ResponseEntity<TaskDTO> createTask(
+            @PathVariable Long panelId,
+            @Valid @RequestBody CreateTaskDTO createTaskDTO
+    ) {
+        TaskDTO createdTask = taskService.createTask(panelId, createTaskDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
     }
 
-    @PutMapping("/tasks/{taskId}")
-    public ResponseEntity<?> updateTask(@PathVariable Long taskId, @Valid @RequestBody UpdateTaskDTO taskDTO) {
-        return ResponseEntity.ok(taskService.updateTask(taskId, taskDTO));
+    @PutMapping("/{taskId}/edit")
+    public ResponseEntity<TaskDTO> updateTask(
+            @PathVariable Long taskId,
+            @Valid @RequestBody UpdateTaskDTO updateTaskDTO
+    ) {
+        TaskDTO updatedTask = taskService.updateTask(taskId, updateTaskDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedTask);
     }
 
     @DeleteMapping("/tasks/{taskId}")
-    public ResponseEntity<?> deleteTask(@PathVariable Long taskId) {
+    public ResponseEntity<HttpStatus> deleteTask(@PathVariable Long taskId) {
         taskService.deleteTask(taskId);
-        return ResponseEntity.ok("Task deleted successfully.");
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/tasks/{taskId}/move")
@@ -55,23 +63,10 @@ public class TaskController {
         return ResponseEntity.ok(taskService.moveTask(taskId, targetColumnId));
     }
 
-    @PostMapping
-    public ResponseEntity<?> createTask(@RequestBody CreateTaskDTO taskCreateRequest) {
-
-        TaskDTO createdTask = taskService.createTask(
-                taskCreateRequest.getPanelId(), taskCreateRequest.getName(),
-                taskCreateRequest.getPriority(), taskCreateRequest.getOrderIndex()
-        );
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
-    }
-
-
     @PatchMapping("/{taskId}/assign/{userId}")
     public ResponseEntity<?> assignUser(@PathVariable Long taskId, @PathVariable Long userId) {
         return ResponseEntity.ok(taskService.assignUser(taskId, userId));
     }
-
 
     // checklist
     @PostMapping("/tasks/{taskId}/subtasks")
@@ -88,12 +83,6 @@ public class TaskController {
     @PatchMapping ("/{taskId}/unarchive")
     public ResponseEntity<?> unArchiveTask(@PathVariable Long taskId) {
         return ResponseEntity.ok(taskService.unArchiveTask(taskId));
-    }
-
-    @GetMapping("/tasks/archive")
-    public ResponseEntity<?> getArchivedTasks(Authentication authentication) {
-        String email = authentication.getName();
-        return ResponseEntity.ok(taskService.getArchivedTasks(email));
     }
     @GetMapping("/archived")
     public ResponseEntity<List<Task>> getArchivedTasks() {
@@ -113,6 +102,11 @@ public class TaskController {
     @GetMapping("/getTask/{id}")
     public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
         return ResponseEntity.ok(taskService.getTaskById(id));
+    }
+
+    @GetMapping("/{taskId}/getMembers")
+    public ResponseEntity<List<UserPreviewDTO>> getUsersInTask(@PathVariable Long taskId) {
+        return ResponseEntity.ok(taskService.getUsersInTask(taskId));
     }
 }
 
