@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.java.teamProject.SmartTaskFlow.dto.board.BoardDTO;
+import ru.java.teamProject.SmartTaskFlow.dto.board.BoardPreviewDto;
 import ru.java.teamProject.SmartTaskFlow.dto.board.CreateBoardDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.board.UpdateBoardDTO;
 import ru.java.teamProject.SmartTaskFlow.entity.Board;
@@ -37,24 +38,29 @@ public class BoardServiceImpl implements BoardService {
                 .setMembers(board.getMembers().stream().map(User::getId).collect(Collectors.toList()));
     }
 
-
+    private BoardPreviewDto buildPreviewDto(Board board){
+        return new BoardPreviewDto()
+                .setName(board.getName());
+    }
     @Override
-    public BoardDTO createBoard(String email, CreateBoardDTO boardDTO) {
+    public BoardDTO createBoard(CreateBoardDTO boardDTO) {
         Board board = new Board();
         board.setName(boardDTO.getName());
+        board.setDescription(boardDTO.getDescription());
         boardRepository.save(board);
 
         return buildDto(board);
     }
 
     @Override
-    public BoardDTO updateBoardName(Long boardId, UpdateBoardDTO boardDTO) {
+    public BoardPreviewDto updateBoard(Long boardId, UpdateBoardDTO boardDTO) {
         log.info("Updating board name for board ID: {}", boardId);
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("Board not found"));
         board.setName(boardDTO.getName());
+        board.setDescription(boardDTO.getDescription());
         boardRepository.save(board);
-        return buildDto(board);
+        return buildPreviewDto(board);
     }
 
     @Override
@@ -64,13 +70,16 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public BoardDTO addMember(Long boardId, Long userId) {
+    public BoardDTO addMember(Long boardId, String usernameOrEmail) {
         log.info("Adding member to board ID: {}", boardId);
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("Board not found"));
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUsernameOrEmailIgnoreCase(usernameOrEmail, usernameOrEmail)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
+        if (board.getMembers().contains(user)) {
+            throw new IllegalArgumentException("User is already a member of this board");
+        }
         board.getMembers().add(user);
         user.getBoards().add(board);
 
@@ -116,13 +125,18 @@ public class BoardServiceImpl implements BoardService {
         return boardRepository.save(board);
     }
     @Override
-    public List<Board> getArchivedBoards() {
-        return boardRepository.findAllByArchivedTrue();
-
+    public List<BoardPreviewDto> getArchivedBoards() {
+        List<Board> archivedBoards = boardRepository.findAllByArchivedTrue();
+        return archivedBoards.stream()
+                .map(this::buildPreviewDto)
+                .collect(Collectors.toList());
     }
     @Override
-    public List<Board> getNonArchivedBoards() {
-        return boardRepository.findAllByArchivedFalse();
+    public List<BoardPreviewDto> getNonArchivedBoards() {
+        List<Board> boards = boardRepository.findAllByArchivedFalse();
+        return boards.stream()
+                .map(this::buildPreviewDto)
+                .collect(Collectors.toList());
     }
     @Override
     public Board getArchivedBoardById(Long id) {

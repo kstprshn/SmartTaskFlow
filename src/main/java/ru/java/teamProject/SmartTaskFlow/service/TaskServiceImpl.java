@@ -4,10 +4,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.java.teamProject.SmartTaskFlow.dto.comment.CreateCommentDTO;
-import ru.java.teamProject.SmartTaskFlow.dto.subtask.CreateSubTaskDTO;
-import ru.java.teamProject.SmartTaskFlow.dto.subtask.SubTaskDTO;
-import ru.java.teamProject.SmartTaskFlow.dto.subtask.UpdateSubTaskDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.task.CreateTaskDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.task.TaskDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.task.UpdateTaskDTO;
@@ -80,7 +76,7 @@ public class TaskServiceImpl implements TaskService {
             task.setPriority(taskDTO.getPriority());
         }
         if (taskDTO.getOrderIndex() != null) {
-            task.setOrderIndex(taskDTO.getOrderIndex());
+            task.setOrderIndex(taskDTO.getOrderIndex()); СДЕЛАТЬ ЧЕРЕЗ OPTIONAL ВМЕСТО КУЧИ IF
         }
         taskRepository.save(task);
 
@@ -105,20 +101,6 @@ public class TaskServiceImpl implements TaskService {
         targetColumn.getTasks().add(task);
 
         panelRepository.save(targetColumn);
-        taskRepository.save(task);
-
-        return buildTaskDto(task);
-    }
-
-    @Override
-    public TaskDTO addCommentToTask(Long taskId, CreateCommentDTO commentDTO) {
-        log.info("Adding comment to task ID: {}", taskId);
-        Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new IllegalArgumentException("Task not found"));
-        Comment comment = new Comment();
-        comment.setContent(commentDTO.getContent());
-        comment.setTask(task);
-        task.getComments().add(comment);
         taskRepository.save(task);
 
         return buildTaskDto(task);

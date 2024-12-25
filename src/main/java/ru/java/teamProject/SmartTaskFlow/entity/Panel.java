@@ -33,7 +33,7 @@ public class Panel {
 
     @OneToMany(mappedBy = "panel", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private List<Task> tasks = new ArrayList<>();
+    private List<Task> tasks;
 
     @Column(nullable = false)
     private Integer orderIndex;

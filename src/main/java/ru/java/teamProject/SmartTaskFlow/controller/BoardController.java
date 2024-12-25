@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.java.teamProject.SmartTaskFlow.dto.board.BoardDTO;
+import ru.java.teamProject.SmartTaskFlow.dto.board.BoardPreviewDto;
 import ru.java.teamProject.SmartTaskFlow.dto.board.CreateBoardDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.board.UpdateBoardDTO;
 import ru.java.teamProject.SmartTaskFlow.entity.Board;
@@ -26,14 +27,13 @@ public class BoardController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createBoard(Authentication authentication, @Valid @RequestBody CreateBoardDTO boardDTO) {
-        String email = authentication.getName();
-        return ResponseEntity.ok(boardService.createBoard(email, boardDTO));
+    public ResponseEntity<?> createBoard( @Valid @RequestBody CreateBoardDTO boardDTO) {
+        return ResponseEntity.ok(boardService.createBoard(boardDTO));
     }
 
-    @PutMapping("/{boardId}")
-    public ResponseEntity<?> updateBoardName(@PathVariable Long boardId, @Valid @RequestBody UpdateBoardDTO boardDTO) {
-        return ResponseEntity.ok(boardService.updateBoardName(boardId, boardDTO));
+    @PatchMapping("/edit/{boardId}")
+    public ResponseEntity<BoardPreviewDto> updateBoard(@PathVariable Long boardId, @Valid @RequestBody UpdateBoardDTO boardDTO) {
+        return ResponseEntity.ok(boardService.updateBoard(boardId, boardDTO));
     }
 
     @DeleteMapping("/{boardId}")
@@ -42,13 +42,14 @@ public class BoardController {
         return ResponseEntity.ok("Board deleted successfully.");
     }
 
-    @PutMapping("/{boardId}/members/{userId}")
-    public ResponseEntity<?> addMember(@PathVariable Long boardId, @PathVariable Long userId) {
-        return ResponseEntity.ok(boardService.addMember(boardId, userId));
+    @PutMapping("/{boardId}/add-member")
+    public ResponseEntity<?> addMemberToBoard(@PathVariable Long boardId, @RequestBody String usernameOrEmail) {
+        return ResponseEntity.ok(boardService.addMember(boardId, usernameOrEmail));
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<BoardDTO>> getAllBoards(Authentication authentication) {
+
+    @GetMapping("/userBoards")
+    public ResponseEntity<List<BoardDTO>> getUserAllBoards(Authentication authentication) {
         String email = authentication.getName();
         List<BoardDTO> boards = boardService.getAllBoards(email);
         return ResponseEntity.ok(boards);
@@ -73,12 +74,12 @@ public class BoardController {
     }
 
     @GetMapping("/archived")
-    public ResponseEntity<List<Board>> getArchivedBoards() {
+    public ResponseEntity<List<BoardPreviewDto>> getArchivedBoards() {
         return ResponseEntity.ok(boardService.getArchivedBoards());
     }
 
     @GetMapping("/non-archived")
-    public ResponseEntity<List<Board>> getNonArchivedBoards() {
+    public ResponseEntity<List<BoardPreviewDto>> getNonArchivedBoards() {
         return ResponseEntity.ok(boardService.getNonArchivedBoards());
     }
 

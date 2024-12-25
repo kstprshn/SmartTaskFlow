@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import ru.java.teamProject.SmartTaskFlow.dto.comment.CreateCommentDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.subtask.CreateSubTaskDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.task.CreateTaskDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.task.TaskDTO;
@@ -54,11 +53,6 @@ public class TaskController {
     @PostMapping("/tasks/{taskId}/move")
     public ResponseEntity<?> moveTask(@PathVariable Long taskId, @RequestParam Long targetColumnId) {
         return ResponseEntity.ok(taskService.moveTask(taskId, targetColumnId));
-    }
-
-    @PostMapping("/tasks/{taskId}/comments")
-    public ResponseEntity<?> addCommentToTask(@PathVariable Long taskId, @Valid @RequestBody CreateCommentDTO commentDTO) {
-        return ResponseEntity.ok(taskService.addCommentToTask(taskId, commentDTO));
     }
 
     @PostMapping

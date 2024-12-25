@@ -1,8 +1,10 @@
 package ru.java.teamProject.SmartTaskFlow.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.java.teamProject.SmartTaskFlow.dto.comment.CommentResponse;
 import ru.java.teamProject.SmartTaskFlow.entity.Comment;
 import ru.java.teamProject.SmartTaskFlow.entity.Task;
 import ru.java.teamProject.SmartTaskFlow.entity.User;
@@ -12,10 +14,12 @@ import ru.java.teamProject.SmartTaskFlow.repository.UserRepository;
 import ru.java.teamProject.SmartTaskFlow.service.abstr.CommentService;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 
 @Service
+@Slf4j
 @Transactional
 public class CommentServiceImpl implements CommentService {
 
@@ -30,6 +34,43 @@ public class CommentServiceImpl implements CommentService {
         this.userRepository = userRepository;
     }
 
+    private CommentResponse buildDTO(Comment comment) {
+        return new CommentResponse()
+                .setId(comment.getId())
+                .setContent(comment.getContent())
+                .setAuthorUsername(comment.getAuthor().getUsername())
+                .setTaskId(comment.getTask().getId())
+                .setCreatedAt(comment.getCreatedDate());
+    }
+
+    @Override
+    public List<CommentResponse> getAllComments() {
+        log.info("Fetching all comments");
+        return commentRepository.findAll().stream()
+                .map(this::buildDTO)
+                .toList();
+    }
+
+    @Override
+    public CommentResponse getCommentById(Long commentId) {
+        log.info("Fetching comment with ID: {}", commentId);
+        return commentRepository.findById(commentId)
+                .map(this::buildDTO)
+                .orElseThrow(() -> new NoSuchElementException("Comment not found"));
+    }
+
+    @Override
+    public CommentResponse updateComment(Long commentId, String newContent) {
+        log.info("Updating comment ID: {}", commentId);
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new NoSuchElementException("Comment not found"));
+
+        comment.setContent(newContent);
+        commentRepository.save(comment);
+        return buildDTO(comment);
+    }
+
+    @Override
     public Comment addComment(Long taskId, Long authorId, String content) {
         Task task = taskRepository.findById(taskId).
                 orElseThrow(() -> new NoSuchElementException("Task not found"));
@@ -43,6 +84,7 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.save(comment);
     }
 
+    @Override
     public void deleteComment(Long commentId) {
         commentRepository.deleteById(commentId);
     }

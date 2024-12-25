@@ -32,10 +32,13 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @ManyToMany(mappedBy = "members", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "assignees", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Board> boards = new ArrayList<>();
 
+    @ManyToMany(mappedBy = "assignedUser", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Task> tasks;
     public User(String firstName, String lastName, String username, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;

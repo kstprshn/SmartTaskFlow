@@ -1,6 +1,5 @@
 package ru.java.teamProject.SmartTaskFlow.service.abstr;
 
-import ru.java.teamProject.SmartTaskFlow.dto.comment.CreateCommentDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.task.CreateTaskDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.task.TaskDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.task.UpdateTaskDTO;
@@ -15,7 +14,6 @@ public interface TaskService {
     TaskDTO updateTask(Long taskId, UpdateTaskDTO taskDTO);
     void deleteTask(Long taskId);
     TaskDTO moveTask(Long taskId, Long targetColumnId);
-    TaskDTO addCommentToTask(Long taskId, CreateCommentDTO commentDTO);
     TaskDTO createTask(Long panelId, String name, String priority, Integer orderIndex);
     TaskDTO assignUser(Long taskId, Long userId);
     List<TaskDTO> getArchivedTasks(String email);

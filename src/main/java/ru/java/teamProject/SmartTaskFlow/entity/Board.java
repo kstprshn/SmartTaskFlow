@@ -26,6 +26,9 @@ public class Board {
     @Column(nullable = false)
     private Boolean archived = false;
 
+    @Column(nullable = true)
+    private String description;
+
     @ManyToMany
     @JoinTable(
             name = "board_members",
@@ -33,9 +36,9 @@ public class Board {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     @JsonIgnore
-    private List<User> members = new ArrayList<>();
+    private List<User> members;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private List<Panel> panels = new ArrayList<>();
+    private List<Panel> panels;
 }

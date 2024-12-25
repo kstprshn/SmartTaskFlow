@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -49,21 +48,19 @@ public class Task {
 
     @ManyToMany
     @JoinTable(
-            name = "task_users",
+            name = "task_user",
             joinColumns = @JoinColumn(name = "task_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     @JsonIgnore
-    private List<User> assignees = new ArrayList<>();
+    private List<User> assignees;
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private List<Subtask> subtasks = new ArrayList<>();
+    private List<Subtask> subtasks;
 
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private List<Comment> comments = new ArrayList<>();
-
-
+    private List<Comment> comments;
 }

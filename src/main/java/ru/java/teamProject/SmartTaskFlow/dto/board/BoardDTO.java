@@ -14,4 +14,5 @@ public class BoardDTO {
     private String name;
     private Boolean archived;
     private List<Long> members;
+    private String description;
 }
