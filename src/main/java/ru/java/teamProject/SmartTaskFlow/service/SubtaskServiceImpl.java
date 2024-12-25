@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.java.teamProject.SmartTaskFlow.dto.subtask.CreateSubTaskDTO;
 import ru.java.teamProject.SmartTaskFlow.entity.Subtask;
 import ru.java.teamProject.SmartTaskFlow.entity.Task;
-import ru.java.teamProject.SmartTaskFlow.entity.enums.Status;
 import ru.java.teamProject.SmartTaskFlow.repository.SubtaskRepository;
 import ru.java.teamProject.SmartTaskFlow.repository.TaskRepository;
 import ru.java.teamProject.SmartTaskFlow.service.abstr.SubtaskService;
@@ -34,7 +33,6 @@ public class SubtaskServiceImpl implements SubtaskService {
                 () -> new NoSuchElementException("Task not found"));
         Subtask subtask = new Subtask();
         subtask.setName(request.getName());
-        subtask.setStatus(Status.NEW);
         subtask.setTask(task);
         return subtaskRepository.save(subtask);
     }

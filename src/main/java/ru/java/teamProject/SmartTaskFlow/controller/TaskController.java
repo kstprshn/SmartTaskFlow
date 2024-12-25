@@ -43,7 +43,7 @@ public class TaskController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
     }
 
-    @PutMapping("/{taskId}/edit")
+    @PatchMapping("/{taskId}/edit")
     public ResponseEntity<TaskDTO> updateTask(
             @PathVariable Long taskId,
             @Valid @RequestBody UpdateTaskDTO updateTaskDTO

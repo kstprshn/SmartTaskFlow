@@ -10,7 +10,5 @@ import lombok.experimental.Accessors;
 public class SubTaskDTO {
     Long id;
     String name;
-    String status;
-
     Long taskId;
 }

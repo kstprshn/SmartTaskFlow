@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.java.teamProject.SmartTaskFlow.entity.enums.Status;
 
 
 @Entity
@@ -21,9 +20,6 @@ public class Subtask {
 
     @Column(nullable = false)
     private String name;
-
-    @Column(nullable = false)
-    private Status status;
 
     @Column(nullable = false)
     private boolean archived = false;

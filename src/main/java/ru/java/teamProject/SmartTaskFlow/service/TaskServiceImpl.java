@@ -29,12 +29,12 @@ public class TaskServiceImpl implements TaskService {
 
     private TaskDTO buildTaskDto(Task task) {
         return new TaskDTO()
-                .setId(task.getId())
                 .setName(task.getName())
                 .setPriority(task.getPriority())
                 .setArchived(task.isArchived())
-                .setStartTime(task.getStartDate().toString())
-                .setEndTime(task.getEndDate().toString())
+                .setStartTime(task.getStartDate() != null ? task.getStartDate().toString() : null)
+                .setEndTime(task.getEndDate() != null ? task.getEndDate().toString() : null)
+                .setDescription(task.getDescription())
                 .setPanelId(task.getPanel().getId());
     }
 
@@ -61,8 +61,9 @@ public class TaskServiceImpl implements TaskService {
 
         Task task = new Task();
         task.setName(createTaskDTO.getName());
-        task.setPriority(createTaskDTO.getPriority());
+        task.setPriority(createTaskDTO.getPriority() != null ? createTaskDTO.getPriority() : null);
         task.setOrderIndex(createTaskDTO.getOrderIndex());
+        task.setDescription(createTaskDTO.getDescription());
         task.setPanel(panel);
         task.setStartDate(createTaskDTO.getStartDate());
         task.setEndDate(createTaskDTO.getEndDate());
@@ -77,10 +78,11 @@ public class TaskServiceImpl implements TaskService {
                 .orElseThrow(() -> new IllegalArgumentException("Task not found"));
 
         Optional.ofNullable(taskDTO.getName()).ifPresent(task::setName);
-        Optional.ofNullable(taskDTO.getPriority()).ifPresent(task::setPriority);
         Optional.ofNullable(taskDTO.getOrderIndex()).ifPresent(task::setOrderIndex);
         Optional.ofNullable(taskDTO.getStartDate()).ifPresent(task::setStartDate);
         Optional.ofNullable(taskDTO.getEndDate()).ifPresent(task::setEndDate);
+        Optional.ofNullable(taskDTO.getDescription()).ifPresent(task::setDescription); // Исправить все так чтобы можно было стирать все эти значения кроме name
+        task.setPriority(taskDTO.getPriority() != null ? taskDTO.getPriority() : null);
 
         taskRepository.save(task);
         return buildTaskDto(task);
@@ -175,5 +177,4 @@ public class TaskServiceImpl implements TaskService {
                         .setFirstName(user.getFirstName()))
                 .collect(Collectors.toList());
     }
-
 }

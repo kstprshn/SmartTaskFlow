@@ -1,6 +1,6 @@
 package ru.java.teamProject.SmartTaskFlow.entity.enums;
 
-public enum Status {
+public enum Priority {
 
-    NEW, IN_PROGRESS, COMPLETED
+    LOW, MEDIUM, HIGH
 }

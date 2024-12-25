@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ru.java.teamProject.SmartTaskFlow.entity.enums.Priority;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,8 +27,8 @@ public class Task {
     @Column
     private String description;
 
-    @Column(nullable = false)
-    private String priority;
+    @Enumerated(EnumType.STRING)
+    private Priority priority;
 
     @Column(nullable = true)
     private LocalDateTime startDate;

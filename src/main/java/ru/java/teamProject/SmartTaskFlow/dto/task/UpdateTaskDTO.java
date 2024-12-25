@@ -5,14 +5,16 @@ import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.FutureOrPresent;
 import lombok.Getter;
 import lombok.Setter;
+import ru.java.teamProject.SmartTaskFlow.entity.enums.Priority;
 
 import java.time.LocalDateTime;
 
 @Getter @Setter
 public class UpdateTaskDTO {
     private String name;
-    private String priority;
+    private Priority priority;
     private Integer orderIndex;
+    private String description;
 
     @FutureOrPresent(message = "Start date must be in the present or future")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
