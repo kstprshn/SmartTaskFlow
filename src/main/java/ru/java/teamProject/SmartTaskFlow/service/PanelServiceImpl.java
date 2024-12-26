@@ -3,6 +3,7 @@ package ru.java.teamProject.SmartTaskFlow.service;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.java.teamProject.SmartTaskFlow.dto.panel.CreatePanelDTO;
 import ru.java.teamProject.SmartTaskFlow.entity.Board;
 import ru.java.teamProject.SmartTaskFlow.entity.Panel;
 import ru.java.teamProject.SmartTaskFlow.repository.BoardRepository;
@@ -25,12 +26,12 @@ public class PanelServiceImpl implements PanelService {
     }
 
     @Override
-    public Panel createPanel(Long boardId, String name, Integer orderIndex) {
+    public Panel createPanel(Long boardId, CreatePanelDTO request) {
         Board board = boardRepository.findById(boardId).orElseThrow(
                 () -> new IllegalArgumentException("Board not found"));
         Panel panel = new Panel();
-        panel.setName(name);
-        panel.setOrderIndex(orderIndex);
+        panel.setName(request.getName());
+        panel.setOrderIndex(request.getOrderIndex());
         panel.setBoard(board);
         return panelRepository.save(panel);
     }

@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class CreatePanelDTO {
-    private Long boardId;
     private String name;
     private Integer orderIndex;
 }

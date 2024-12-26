@@ -6,7 +6,6 @@ import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import ru.java.teamProject.SmartTaskFlow.entity.enums.Priority;
 
 import java.time.LocalDateTime;
 
@@ -16,7 +15,6 @@ public class CreateTaskDTO {
     @NotNull
     private String name;
     private Integer orderIndex;
-    private Priority priority;
     private String description;
 
 

@@ -37,13 +37,6 @@ public class PanelController {
         return new ResponseEntity<>(panelById, HttpStatus.OK);
     }
 
-    @PostMapping("/panels")
-    public ResponseEntity<Panel> createPanel(@RequestBody CreatePanelDTO request) {
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(panelService.createPanel(request.getBoardId(), request.getName(), request.getOrderIndex()));
-    }
-
 
     @PutMapping("/panels/{panelId}")
     public ResponseEntity<Panel> updatePanel(@PathVariable Long panelId, @RequestBody PanelUpdateDTO request) {
@@ -79,6 +72,13 @@ public class PanelController {
     }
 
     // Get /api/board/{boardId}/panels -> Список <дто панелей> на доске
+
+    @PostMapping("/boards/{boardId}/panels")
+    public ResponseEntity<Panel> createPanel(@RequestBody CreatePanelDTO request, @PathVariable Long boardId) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(panelService.createPanel(boardId, request));
+    }
 
     @GetMapping("/boards/{boardId}/panels")
     public ResponseEntity<List<Panel>> getAllPanelByBoardId(@PathVariable Long boardId) {

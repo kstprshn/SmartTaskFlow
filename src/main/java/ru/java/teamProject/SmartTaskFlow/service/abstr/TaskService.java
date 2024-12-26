@@ -10,7 +10,7 @@ import java.util.List;
 
 
 public interface TaskService {
-    List<TaskDTO> getTasksInColumn(Long columnId);
+    List<TaskDTO> getTasksInPanel(Long columnId);
     TaskDTO updateTask(Long taskId, UpdateTaskDTO taskDTO);
     void deleteTask(Long taskId);
     TaskDTO moveTask(Long taskId, Long targetColumnId);

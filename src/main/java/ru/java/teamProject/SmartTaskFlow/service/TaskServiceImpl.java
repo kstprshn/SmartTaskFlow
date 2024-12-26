@@ -29,12 +29,14 @@ public class TaskServiceImpl implements TaskService {
 
     private TaskDTO buildTaskDto(Task task) {
         return new TaskDTO()
+                .setId(task.getId())
                 .setName(task.getName())
                 .setArchived(task.isArchived())
                 .setStartTime(task.getStartDate() != null ? task.getStartDate().toString() : null)
                 .setEndTime(task.getEndDate() != null ? task.getEndDate().toString() : null)
                 .setDescription(task.getDescription())
-                .setPanelId(task.getPanel().getId());
+                .setPanelId(task.getPanel().getId())
+                .setSubTaskIds(task.getSubtasks().stream().map(Subtask::getId).collect(Collectors.toList()));
     }
 
     private UserPreviewDTO buildPreviewDto(User user){  //нужен, тк по схеме олега должны выводиться только названия задач
@@ -44,9 +46,9 @@ public class TaskServiceImpl implements TaskService {
 
 
     @Override
-    public List<TaskDTO> getTasksInColumn(Long columnId) {
-        log.info("Fetching tasks for column ID: {}", columnId);
-        return taskRepository.findByPanelId(columnId)
+    public List<TaskDTO> getTasksInPanel(Long panelId) {
+        log.info("Fetching tasks for column ID: {}", panelId);
+        return taskRepository.findByPanelId(panelId)
                 .stream().map(this::buildTaskDto)
                 .collect(Collectors.toList());
     }

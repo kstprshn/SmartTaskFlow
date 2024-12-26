@@ -77,13 +77,23 @@ public class SubtaskServiceImpl implements SubtaskService {
     }
 
     @Override
-    public Subtask getArchivedSubtaskById(Long id) {
-        return subtaskRepository.findByIdAndArchivedTrue(id)
-                .orElseThrow(() -> new EntityNotFoundException("Archived subtask not found"));
+    public List<Subtask> getSubtaskByTaskId(Long taskId) {
+        Task task = taskRepository.getReferenceById(taskId);
+
+        return subtaskRepository.findAllByTask(task);
     }
 
     @Override
-    public Subtask getNonArchivedSubtaskById(Long id) {
-        return subtaskRepository.findByIdAndArchivedFalse(id)
-                .orElseThrow(() -> new EntityNotFoundException("Subtask not found"));    }
+    public List<Subtask> getArchivedSubtaskByTaskId(Long taskId) {
+        Task task = taskRepository.getReferenceById(taskId);
+
+        return subtaskRepository.findAllByTaskAndArchivedTrue(task);
+    }
+
+    @Override
+    public List<Subtask> getNonArchivedSubtaskByTaskId(Long taskId) {
+        Task task = taskRepository.getReferenceById(taskId);
+
+        return subtaskRepository.findAllByTaskAndArchivedFalse(task);
+    }
 }

@@ -15,8 +15,9 @@ public interface SubtaskService {
     Subtask unArchiveSubtask(Long id);
     List<Subtask> getArchivedSubtasks();
     List<Subtask> getNonArchivedSubtasks();
-    Subtask getArchivedSubtaskById(Long id);
-    Subtask getNonArchivedSubtaskById(Long id);
+    List<Subtask> getSubtaskByTaskId(Long taskId);
+    List<Subtask> getArchivedSubtaskByTaskId(Long id);
+    List<Subtask> getNonArchivedSubtaskByTaskId(Long id);
 
 }
 

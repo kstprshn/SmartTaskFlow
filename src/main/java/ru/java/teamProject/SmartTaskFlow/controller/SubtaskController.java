@@ -62,13 +62,10 @@ public class SubtaskController {
         return ResponseEntity.ok(subtaskService.getNonArchivedSubtasks());
     }
 
-    @GetMapping("/archived/{id}")
-    public ResponseEntity<Subtask> getArchivedSubtaskById(@PathVariable Long id) {
-        return ResponseEntity.ok(subtaskService.getArchivedSubtaskById(id));
-    }
 
-    @GetMapping("/getSubtask/{id}")
-    public ResponseEntity<Subtask> getSubtaskById(@PathVariable Long id) {
-        return ResponseEntity.ok(subtaskService.getNonArchivedSubtaskById(id));
+    //
+    @GetMapping("/getSubtask/byTask/{taskId}")
+    public ResponseEntity<?> getSubtaskByTask(@PathVariable Long taskId) {
+        return ResponseEntity.ok(subtaskService.getSubtaskByTaskId(taskId));
     }
 }
