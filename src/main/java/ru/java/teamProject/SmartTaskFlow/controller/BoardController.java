@@ -30,7 +30,7 @@ public class BoardController {
     public ResponseEntity<?> createBoard( @Valid @RequestBody CreateBoardDTO boardDTO, Authentication authentication) {
         return ResponseEntity.ok(boardService.createBoard(boardDTO, authentication));
     }
-
+    
 
     @PatchMapping("/{boardId}/edit")
     public ResponseEntity<BoardPreviewDto> updateBoard(@PathVariable Long boardId, @Valid @RequestBody UpdateBoardDTO boardDTO) {

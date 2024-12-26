@@ -14,7 +14,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/panels")
+@RequestMapping("/api")
 public class PanelController {
 
     private final PanelService panelService;
@@ -25,55 +25,77 @@ public class PanelController {
     }
 
 
-    @GetMapping("/all")
+    @GetMapping("/panels/all")
     public ResponseEntity<List<Panel>> getAllPanels() {
         List<Panel> panels = panelService.getNonArchivedPanels();
         return ResponseEntity.status(HttpStatus.OK).body(panels);
     }
 
-    @GetMapping("/getPanel/{panelId}")
+    @GetMapping("/panels/getPanel/{panelId}")
     public ResponseEntity<Panel> getPanel(@PathVariable Long panelId){
         Panel panelById = panelService.getPanelById(panelId);
         return new ResponseEntity<>(panelById, HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/panels")
     public ResponseEntity<Panel> createPanel(@RequestBody CreatePanelDTO request) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(panelService.createPanel(request.getBoardId(), request.getName(), request.getOrderIndex()));
     }
 
-    @PutMapping("/{panelId}")
+
+    @PutMapping("/panels/{panelId}")
     public ResponseEntity<Panel> updatePanel(@PathVariable Long panelId, @RequestBody PanelUpdateDTO request) {
         return ResponseEntity
                 .ok(panelService.updatePanel(panelId, request.getName()));
     }
 
-    @PatchMapping("/{id}/archive")
+    @PatchMapping("/panels/{id}/archive")
     public ResponseEntity<Panel> archivePanel(@PathVariable Long id) {
         Panel archivedPanel = panelService.archivePanel(id);
         return ResponseEntity.ok(archivedPanel);
     }
 
-    @PatchMapping("/{id}/unarchive")
+    @PatchMapping("/panels/{id}/unarchive")
     public ResponseEntity<Panel> unArchivePanel(@PathVariable Long id) {
         Panel unArchivedPanel = panelService.unArchivePanel(id);
         return ResponseEntity.ok(unArchivedPanel);
     }
 
-    @DeleteMapping("/{panelId}")
+    @DeleteMapping("/panels/{panelId}")
     public ResponseEntity<Void> deletePanel(@PathVariable Long panelId) {
         panelService.deletePanel(panelId);
         return ResponseEntity.noContent().build();
     }
-    @GetMapping("/archived")
+    @GetMapping("/panels/archived")
     public ResponseEntity<List<Panel>> getArchivedPanels() {
         return ResponseEntity.ok(panelService.getArchivedPanels());
     }
 
-    @GetMapping("/archived/{id}")
+    @GetMapping("/panels/archived/{id}")
     public ResponseEntity<Panel> getArchivedPanelById(@PathVariable Long id) {
         return ResponseEntity.ok(panelService.getArchivedPanelById(id));
     }
+
+    // Get /api/board/{boardId}/panels -> Список <дто панелей> на доске
+
+    @GetMapping("/boards/{boardId}/panels")
+    public ResponseEntity<List<Panel>> getAllPanelByBoardId(@PathVariable Long boardId) {
+        List<Panel> panels = panelService.getPanels(boardId);
+        return ResponseEntity.status(HttpStatus.OK).body(panels);
+    }
+
+    @GetMapping("/boards/{boardId}/panels/archived")
+    public ResponseEntity<List<Panel>> getArchivedPanelByBoardId(@PathVariable Long boardId) {
+        List<Panel> panels = panelService.getArchivedPanels(boardId);
+        return ResponseEntity.status(HttpStatus.OK).body(panels);
+    }
+
+    @GetMapping("/boards/{boardId}/panels/non-archived")
+    public ResponseEntity<List<Panel>> getNonArchivedPanelByBoardId(@PathVariable Long boardId) {
+        List<Panel> panels = panelService.getNonArchivedPanels(boardId);
+        return ResponseEntity.status(HttpStatus.OK).body(panels);
+    }
+
 }

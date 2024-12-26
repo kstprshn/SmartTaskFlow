@@ -24,6 +24,7 @@ public class PanelServiceImpl implements PanelService {
         this.boardRepository = boardRepository;
     }
 
+    @Override
     public Panel createPanel(Long boardId, String name, Integer orderIndex) {
         Board board = boardRepository.findById(boardId).orElseThrow(
                 () -> new IllegalArgumentException("Board not found"));
@@ -34,6 +35,7 @@ public class PanelServiceImpl implements PanelService {
         return panelRepository.save(panel);
     }
 
+    @Override
     public Panel updatePanel(Long panelId, String newName) {
         Panel panel = panelRepository.findById(panelId).orElseThrow(
                 () -> new NoSuchElementException("Panel not found"));
@@ -41,6 +43,7 @@ public class PanelServiceImpl implements PanelService {
         return panelRepository.save(panel);
     }
 
+    @Override
     public void deletePanel(Long panelId) {
         panelRepository.deleteById(panelId);
     }
@@ -61,6 +64,25 @@ public class PanelServiceImpl implements PanelService {
 
         panel.setArchived(false);
         return panelRepository.save(panel);
+    }
+
+    @Override
+    public List<Panel> getArchivedPanels(Long boardId) {
+        Board board = boardRepository.findById(boardId).orElseThrow();
+        return panelRepository.findAllByBoardAndArchivedFalse(board);
+    }
+
+    @Override
+    public List<Panel> getNonArchivedPanels(Long boardId) {
+        Board board = boardRepository.findById(boardId).orElseThrow();
+        return panelRepository.findAllByBoardAndArchivedTrue(board);
+    }
+
+    @Override
+    public List<Panel> getPanels(Long boardId) {
+        Board board = boardRepository.findById(boardId).orElseThrow();
+
+        return board.getPanels();
     }
 
     @Override

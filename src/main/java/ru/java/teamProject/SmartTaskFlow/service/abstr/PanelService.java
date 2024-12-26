@@ -4,14 +4,18 @@ import ru.java.teamProject.SmartTaskFlow.entity.Panel;
 
 import java.util.List;
 
-public interface PanelService {
+public interface PanelService { // RETURN PANEL DTO NOT A PANEL
     Panel createPanel(Long boardId, String name, Integer orderIndex);
     Panel updatePanel(Long panelId, String newName);
     void deletePanel(Long panelId);
     Panel archivePanel(Long id);
     Panel unArchivePanel(Long id);
-    List<Panel> getArchivedPanels();
 
+    List<Panel> getPanels(Long boardId);
+    List<Panel> getArchivedPanels(Long boardId);
+    List<Panel> getNonArchivedPanels(Long boardId);
+
+    List<Panel> getArchivedPanels();
     List<Panel> getNonArchivedPanels();
     Panel getArchivedPanelById(Long id);
     Panel getPanelById(Long id);
