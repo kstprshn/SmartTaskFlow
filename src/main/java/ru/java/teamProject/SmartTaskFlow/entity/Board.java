@@ -7,10 +7,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "boards")
+@Table(name = "board")
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter @Getter
@@ -30,14 +31,14 @@ public class Board {
 
     @ManyToMany
     @JoinTable(
-            name = "board_members",
+            name = "members",
             joinColumns = @JoinColumn(name = "board_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     @JsonIgnore
-    private List<User> members;
+    private List<User> members = new ArrayList<>();
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private List<Panel> panels;
+    private List<Panel> panels = new ArrayList<>();
 }

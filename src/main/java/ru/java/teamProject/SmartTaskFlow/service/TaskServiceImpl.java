@@ -30,7 +30,6 @@ public class TaskServiceImpl implements TaskService {
     private TaskDTO buildTaskDto(Task task) {
         return new TaskDTO()
                 .setName(task.getName())
-                .setPriority(task.getPriority())
                 .setArchived(task.isArchived())
                 .setStartTime(task.getStartDate() != null ? task.getStartDate().toString() : null)
                 .setEndTime(task.getEndDate() != null ? task.getEndDate().toString() : null)
@@ -61,7 +60,6 @@ public class TaskServiceImpl implements TaskService {
 
         Task task = new Task();
         task.setName(createTaskDTO.getName());
-        task.setPriority(createTaskDTO.getPriority() != null ? createTaskDTO.getPriority() : null);
         task.setOrderIndex(createTaskDTO.getOrderIndex());
         task.setDescription(createTaskDTO.getDescription());
         task.setPanel(panel);
@@ -82,7 +80,6 @@ public class TaskServiceImpl implements TaskService {
         Optional.ofNullable(taskDTO.getStartDate()).ifPresent(task::setStartDate);
         Optional.ofNullable(taskDTO.getEndDate()).ifPresent(task::setEndDate);
         Optional.ofNullable(taskDTO.getDescription()).ifPresent(task::setDescription); // Исправить все так чтобы можно было стирать все эти значения кроме name
-        task.setPriority(taskDTO.getPriority() != null ? taskDTO.getPriority() : null);
 
         taskRepository.save(task);
         return buildTaskDto(task);
@@ -112,7 +109,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDTO assignUser(Long taskId, Long userId) { Это точно надо, вопрос для чего
+    public TaskDTO assignUser(Long taskId, Long userId) { //Это точно надо, вопрос для чего
         log.info("Assigning user ID: {} to task ID: {}", userId, taskId);
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("Task not found"));

@@ -27,9 +27,10 @@ public class BoardController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createBoard( @Valid @RequestBody CreateBoardDTO boardDTO) {
-        return ResponseEntity.ok(boardService.createBoard(boardDTO));
+    public ResponseEntity<?> createBoard( @Valid @RequestBody CreateBoardDTO boardDTO, Authentication authentication) {
+        return ResponseEntity.ok(boardService.createBoard(boardDTO, authentication));
     }
+
 
     @PatchMapping("/{boardId}/edit")
     public ResponseEntity<BoardPreviewDto> updateBoard(@PathVariable Long boardId, @Valid @RequestBody UpdateBoardDTO boardDTO) {
@@ -42,7 +43,7 @@ public class BoardController {
         return ResponseEntity.ok("Board deleted successfully.");
     }
 
-    @PutMapping("/{boardId}/add-member")
+    @PutMapping("/{boardId} /add-member")
     public ResponseEntity<?> addMemberToBoard(@PathVariable Long boardId, @RequestBody String usernameOrEmail) {
         return ResponseEntity.ok(boardService.addMember(boardId, usernameOrEmail));
     }
@@ -67,13 +68,13 @@ public class BoardController {
     }
 
     @GetMapping("/archived")
-    public ResponseEntity<List<BoardPreviewDto>> getArchivedBoards() {
-        return ResponseEntity.ok(boardService.getArchivedBoards());
+    public ResponseEntity<?> getArchivedBoards(Authentication authentication) {
+        return ResponseEntity.ok(boardService.getArchivedBoards(authentication));
     }
 
     @GetMapping("/non-archived")
-    public ResponseEntity<List<BoardPreviewDto>> getNonArchivedBoards() {
-        return ResponseEntity.ok(boardService.getNonArchivedBoards());
+    public ResponseEntity<?> getNonArchivedBoards(Authentication authentication) {
+        return ResponseEntity.ok(boardService.getNonArchivedBoards(authentication));
     }
 
     @GetMapping("/{id}/archived")

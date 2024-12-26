@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import ru.java.teamProject.SmartTaskFlow.service.UserServiceImpl;
+import ru.java.teamProject.SmartTaskFlow.service.abstr.UserService;
 
 import java.io.IOException;
 
@@ -18,10 +19,10 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
-    private final UserServiceImpl userServiceImpl;
+    private final UserService userServiceImpl;
 
     @Autowired
-    public JwtAuthenticationFilter(JwtUtils jwtUtils, UserServiceImpl userServiceImpl) {
+    public JwtAuthenticationFilter(JwtUtils jwtUtils, UserService userServiceImpl) {
         this.jwtUtils = jwtUtils;
         this.userServiceImpl = userServiceImpl;
     }

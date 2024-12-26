@@ -58,6 +58,11 @@ public class UserController {
         }
     }
 
+    @GetMapping("/profile")
+    public ResponseEntity<?> getUserProfile(Authentication authentication) {
+        return ResponseEntity.ok(userService.getUser(authentication));
+    }
+
     @PutMapping("/profile")
     public ResponseEntity<?> updateProfile(Authentication authentication, @Valid @RequestBody UpdateProfileDTO profileDTO) {
         String email = authentication.getName();

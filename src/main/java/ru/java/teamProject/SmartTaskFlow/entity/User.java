@@ -32,11 +32,14 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @ManyToMany(mappedBy = "assignees", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "members", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JsonIgnore
     private List<Board> boards = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "assignedUser", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "assignees", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JsonIgnore
     private List<Task> tasks;
     public User(String firstName, String lastName, String username, String email, String password) {

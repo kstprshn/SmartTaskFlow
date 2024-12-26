@@ -2,6 +2,7 @@ package ru.java.teamProject.SmartTaskFlow.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.java.teamProject.SmartTaskFlow.dto.board.BoardDTO;
@@ -15,6 +16,8 @@ import ru.java.teamProject.SmartTaskFlow.repository.BoardRepository;
 import ru.java.teamProject.SmartTaskFlow.repository.UserRepository;
 import ru.java.teamProject.SmartTaskFlow.service.abstr.BoardService;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,8 +47,11 @@ public class BoardServiceImpl implements BoardService {
                 .setName(board.getName());
     }
     @Override
-    public BoardDTO createBoard(CreateBoardDTO boardDTO) {
+    public BoardDTO createBoard(CreateBoardDTO boardDTO, Authentication authentication) {
+        User user = userRepository.findByEmail(authentication.getName()).orElseThrow();
+
         Board board = new Board();
+        board.getMembers().add(user);
         board.setName(boardDTO.getName());
         board.setDescription(boardDTO.getDescription());
         boardRepository.save(board);
@@ -119,17 +125,22 @@ public class BoardServiceImpl implements BoardService {
         return boardRepository.save(board);
     }
     @Override
-    public List<BoardPreviewDto> getArchivedBoards() {
+    public List<BoardDTO> getArchivedBoards(Authentication authentication) {
         List<Board> archivedBoards = boardRepository.findAllByArchivedTrue();
         return archivedBoards.stream()
-                .map(this::buildPreviewDto)
+                .map(this::buildDto)
                 .collect(Collectors.toList());
     }
     @Override
-    public List<BoardPreviewDto> getNonArchivedBoards() {
-        List<Board> boards = boardRepository.findAllByArchivedFalse();
+    public List<BoardDTO> getNonArchivedBoards(Authentication authentication) {
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new IllegalArgumentException("User not found"));
+
+        List<Board> boards = boardRepository.findAllByMembersContainsAndArchivedFalse(user);
+
         return boards.stream()
-                .map(this::buildPreviewDto)
+                .map(this::buildDto)
                 .collect(Collectors.toList());
     }
     @Override
