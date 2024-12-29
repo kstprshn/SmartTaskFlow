@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.java.teamProject.SmartTaskFlow.dto.subtask.CreateSubTaskDTO;
+import ru.java.teamProject.SmartTaskFlow.dto.subtask.UpdateSubTaskDTO;
 import ru.java.teamProject.SmartTaskFlow.entity.Subtask;
 import ru.java.teamProject.SmartTaskFlow.entity.Task;
 import ru.java.teamProject.SmartTaskFlow.repository.SubtaskRepository;
@@ -13,6 +14,7 @@ import ru.java.teamProject.SmartTaskFlow.service.abstr.SubtaskService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -38,10 +40,11 @@ public class SubtaskServiceImpl implements SubtaskService {
     }
 
     @Override
-    public Subtask updateSubtask(Long subtaskId, CreateSubTaskDTO request) {
+    public Subtask updateSubtask(Long subtaskId, UpdateSubTaskDTO request) {
         Subtask subtask = subtaskRepository.findById(subtaskId).orElseThrow(
                 () -> new NoSuchElementException("Subtask not found"));
-        subtask.setName(request.getName());
+        Optional.ofNullable(request.getName()).ifPresent(subtask::setName);
+        subtask.setCompleted(request.isCompleted());
         return subtaskRepository.save(subtask);
     }
 

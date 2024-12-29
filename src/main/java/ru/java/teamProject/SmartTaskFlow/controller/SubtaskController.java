@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.java.teamProject.SmartTaskFlow.dto.subtask.CreateSubTaskDTO;
+import ru.java.teamProject.SmartTaskFlow.dto.subtask.UpdateSubTaskDTO;
 import ru.java.teamProject.SmartTaskFlow.entity.Subtask;
 import ru.java.teamProject.SmartTaskFlow.service.abstr.SubtaskService;
 
@@ -29,8 +30,8 @@ public class SubtaskController {
                 .body(subtaskService.createSubtask(request.getTaskId(), request));
     }
 
-    @PutMapping("/{subtaskId}")
-    public ResponseEntity<Subtask> updateSubtask(@PathVariable Long subtaskId, @RequestBody CreateSubTaskDTO request) {
+    @PatchMapping("/{subtaskId}")
+    public ResponseEntity<Subtask> updateSubtask(@PathVariable Long subtaskId, @RequestBody UpdateSubTaskDTO request) {
         return ResponseEntity
                 .ok(subtaskService.updateSubtask(subtaskId, request));
     }

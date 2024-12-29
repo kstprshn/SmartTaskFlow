@@ -16,8 +16,7 @@ import ru.java.teamProject.SmartTaskFlow.repository.BoardRepository;
 import ru.java.teamProject.SmartTaskFlow.repository.UserRepository;
 import ru.java.teamProject.SmartTaskFlow.service.abstr.BoardService;
 
-import java.util.ArrayList;
-import java.util.Collections;
+
 import java.util.List;
 import java.util.stream.Collectors;
 

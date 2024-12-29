@@ -24,6 +24,9 @@ public class Subtask {
     @Column(nullable = false)
     private boolean archived = false;
 
+    @Column(nullable = false)
+    private boolean completed = false;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id", nullable = false)
     @JsonIgnore
