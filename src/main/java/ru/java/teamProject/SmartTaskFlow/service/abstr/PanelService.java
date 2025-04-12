@@ -12,7 +12,7 @@ public interface PanelService { // RETURN PANEL DTO NOT A PANEL
     Panel archivePanel(Long id);
     Panel unArchivePanel(Long id);
 
-    List<Panel> getPanels(Long boardId);
+    List<Panel> getPanelsByBoard(Long boardId);
     List<Panel> getArchivedPanels(Long boardId);
     List<Panel> getNonArchivedPanels(Long boardId);
 

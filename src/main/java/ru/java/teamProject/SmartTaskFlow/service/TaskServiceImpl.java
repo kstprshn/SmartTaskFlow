@@ -96,6 +96,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskDTO moveTask(Long taskId, Long targetColumnId) {
         log.info("Moving task ID: {} to column ID: {}", taskId, targetColumnId);
+
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("Task not found"));
         Panel targetColumn = panelRepository.findById(targetColumnId)
@@ -111,8 +112,10 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDTO assignUser(Long taskId, Long userId) { //Это точно надо, вопрос для чего
+    public TaskDTO assignUserToTask(Long taskId, Long userId) { //Это точно надо, вопрос для чего
+
         log.info("Assigning user ID: {} to task ID: {}", userId, taskId);
+
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("Task not found"));
         User user = userRepository.findById(userId)
@@ -126,7 +129,9 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskDTO archiveTask(Long taskId) {
+
         log.info("Archiving task ID: {}", taskId);
+
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("Task not found"));
         task.setArchived(true);

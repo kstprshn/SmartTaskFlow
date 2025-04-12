@@ -12,8 +12,6 @@ public interface UserService extends UserDetailsService {
     void updateProfile(String email, UpdateProfileDTO profileDTO);
     void logout(String email);
     void deleteUser(Long userId);
-
-    
     UserResponseDTO getUser(Authentication authentication);
     UserResponseDTO getUserById(Long id);
     UserResponseDTO getUserByEmailOrUsername(String identifier);

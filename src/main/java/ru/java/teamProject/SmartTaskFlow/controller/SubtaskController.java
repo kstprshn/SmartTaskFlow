@@ -67,6 +67,6 @@ public class SubtaskController {
     //
     @GetMapping("/getSubtask/byTask/{taskId}")
     public ResponseEntity<?> getSubtaskByTask(@PathVariable Long taskId) {
-        return ResponseEntity.ok(subtaskService.getSubtaskByTaskId(taskId));
+        return ResponseEntity.ok(subtaskService.getSubtaskByTask(taskId));
     }
 }

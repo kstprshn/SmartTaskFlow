@@ -1,6 +1,7 @@
 package ru.java.teamProject.SmartTaskFlow.service;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@Slf4j
 public class SubtaskServiceImpl implements SubtaskService {
 
     private final SubtaskRepository subtaskRepository;
@@ -80,7 +82,7 @@ public class SubtaskServiceImpl implements SubtaskService {
     }
 
     @Override
-    public List<Subtask> getSubtaskByTaskId(Long taskId) {
+    public List<Subtask> getSubtaskByTask(Long taskId) {
         Task task = taskRepository.getReferenceById(taskId);
 
         return subtaskRepository.findAllByTask(task);

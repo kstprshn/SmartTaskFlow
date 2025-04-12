@@ -51,7 +51,7 @@ public class TaskController {
 
     @PatchMapping("/tasks/{taskId}/assign/{userId}")
     public ResponseEntity<?> assignUser(@PathVariable Long taskId, @PathVariable Long userId) {
-        return ResponseEntity.ok(taskService.assignUser(taskId, userId));
+        return ResponseEntity.ok(taskService.assignUserToTask(taskId, userId));
     }
 
     // checklist

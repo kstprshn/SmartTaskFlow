@@ -51,7 +51,7 @@ public class BoardController {
     @GetMapping("/userBoards")
     public ResponseEntity<List<BoardDTO>> getUserAllBoards(Authentication authentication) {
         String email = authentication.getName();
-        List<BoardDTO> boards = boardService.getAllBoards(email);
+        List<BoardDTO> boards = boardService.getBoardsForUser(email);
         return ResponseEntity.ok(boards);
     }
 
@@ -87,7 +87,7 @@ public class BoardController {
     }
     @GetMapping("/{boardId}/getMembers")
     public ResponseEntity<List<UserPreviewDTO>> getUsersInTask(@PathVariable Long boardId) {
-        return ResponseEntity.ok(boardService.getUsersInBoard(boardId));
+        return ResponseEntity.ok(boardService.getBoardMembers(boardId));
     }
 }
 

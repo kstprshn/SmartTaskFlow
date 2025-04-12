@@ -10,6 +10,6 @@ public interface CommentService {
     List<CommentResponse> getAllComments();
     CommentResponse getCommentById(Long commentId);
     CommentResponse updateComment(Long commentId, String newContent);
-    Comment addComment(Long taskId, Long authorId, String content);
+    Comment createComment(Long taskId, Long authorId, String content);
     void deleteComment(Long commentId);
 }

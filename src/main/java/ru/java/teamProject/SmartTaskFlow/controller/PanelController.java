@@ -82,7 +82,7 @@ public class PanelController {
 
     @GetMapping("/boards/{boardId}/panels")
     public ResponseEntity<List<Panel>> getAllPanelByBoardId(@PathVariable Long boardId) {
-        List<Panel> panels = panelService.getPanels(boardId);
+        List<Panel> panels = panelService.getPanelsByBoard(boardId);
         return ResponseEntity.status(HttpStatus.OK).body(panels);
     }
 

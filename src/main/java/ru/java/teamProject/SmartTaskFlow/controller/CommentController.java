@@ -48,7 +48,7 @@ public class CommentController {
     public ResponseEntity<Comment> addComment(@PathVariable Long taskId, @RequestBody @Valid CreateCommentDTO request) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(commentService.addComment(taskId, request.getAuthorId(), request.getContent()));
+                .body(commentService.createComment(taskId, request.getAuthorId(), request.getContent()));
     }
 
     @DeleteMapping("/{commentId}")

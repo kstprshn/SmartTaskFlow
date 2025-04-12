@@ -71,7 +71,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment addComment(Long taskId, Long authorId, String content) {
+    public Comment createComment(Long taskId, Long authorId, String content) {
         Task task = taskRepository.findById(taskId).
                 orElseThrow(() -> new NoSuchElementException("Task not found"));
         User author = userRepository.findById(authorId).

@@ -15,14 +15,14 @@ public interface BoardService {
     BoardPreviewDto updateBoard(Long boardId, UpdateBoardDTO boardDTO);
     void deleteBoard(Long boardId);
     BoardDTO addMember(Long boardId, String usernameOrEmail);
-    List<BoardDTO> getAllBoards(String email);
+    List<BoardDTO> getBoardsForUser(String email);
     Board archiveBoard(Long id);
     Board unArchiveBoard(Long id);
     List<BoardDTO> getArchivedBoards(Authentication authentication);
     List<BoardDTO> getNonArchivedBoards(Authentication authentication);
     Board getArchivedBoardById(Long id);
     Board findBoardById(Long id);
-    List<UserPreviewDTO> getUsersInBoard(Long boardId);
+    List<UserPreviewDTO> getBoardMembers(Long boardId);
 
 
 }

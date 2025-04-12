@@ -1,6 +1,7 @@
 package ru.java.teamProject.SmartTaskFlow.service;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.java.teamProject.SmartTaskFlow.dto.panel.CreatePanelDTO;
@@ -15,6 +16,7 @@ import java.util.NoSuchElementException;
 
 @Service
 @Transactional
+@Slf4j
 public class PanelServiceImpl implements PanelService {
 
     private final PanelRepository panelRepository;
@@ -80,7 +82,7 @@ public class PanelServiceImpl implements PanelService {
     }
 
     @Override
-    public List<Panel> getPanels(Long boardId) {
+    public List<Panel> getPanelsByBoard(Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow();
 
         return board.getPanels();

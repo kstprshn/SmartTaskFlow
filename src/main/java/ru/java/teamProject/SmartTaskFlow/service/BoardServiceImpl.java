@@ -47,14 +47,16 @@ public class BoardServiceImpl implements BoardService {
     }
     @Override
     public BoardDTO createBoard(CreateBoardDTO boardDTO, Authentication authentication) {
-        User user = userRepository.findByEmail(authentication.getName()).orElseThrow();
+        User user = userRepository.findByEmail(authentication.getName()).orElseThrow(EntityNotFoundException::new);
 
         Board board = new Board();
         board.getMembers().add(user);
         board.setName(boardDTO.getName());
         board.setDescription(boardDTO.getDescription());
+
         boardRepository.save(board);
 
+        log.info("Creating a board with the name {}", boardDTO.getName());
         return buildDto(board);
     }
 
@@ -96,7 +98,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardDTO> getAllBoards(String email) {
+    public List<BoardDTO> getBoardsForUser(String email) {
         log.info("Fetching all boards for user: {}", email);
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
@@ -112,6 +114,8 @@ public class BoardServiceImpl implements BoardService {
                 .orElseThrow(() -> new EntityNotFoundException("Board not found"));
 
         board.setArchived(true);
+
+        log.info("A board with the name {} is archived", board.getName());
         return boardRepository.save(board);
     }
 
@@ -150,12 +154,14 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public Board findBoardById(Long id) {
+
+        log.info("Fetching an active board with id {}", id);
         return boardRepository.findByIdAndArchivedFalse(id)
                 .orElseThrow(() -> new EntityNotFoundException("Board not found"));
     }
 
     @Override
-    public List<UserPreviewDTO> getUsersInBoard(Long boardId) {
+    public List<UserPreviewDTO> getBoardMembers(Long boardId) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("Board not found"));
         return board.getMembers()

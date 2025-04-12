@@ -15,7 +15,7 @@ public interface TaskService {
     void deleteTask(Long taskId);
     TaskDTO moveTask(Long taskId, Long targetColumnId);
     TaskDTO createTask(Long panelId,CreateTaskDTO createTaskDTO);
-    TaskDTO assignUser(Long taskId, Long userId);
+    TaskDTO assignUserToTask(Long taskId, Long userId);
     TaskDTO archiveTask(Long taskId);
     TaskDTO unArchiveTask(Long taskId);
     List<Task> getArchivedTasks();

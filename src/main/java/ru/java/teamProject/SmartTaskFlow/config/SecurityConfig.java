@@ -1,6 +1,5 @@
 package ru.java.teamProject.SmartTaskFlow.config;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,12 +15,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ru.java.teamProject.SmartTaskFlow.jwt.JwtAuthenticationFilter;
 import ru.java.teamProject.SmartTaskFlow.jwt.JwtUtils;
-import ru.java.teamProject.SmartTaskFlow.service.UserServiceImpl;
 import ru.java.teamProject.SmartTaskFlow.service.abstr.UserService;
 
 @EnableWebSecurity
 @Configuration
-@RequiredArgsConstructor
 public class SecurityConfig {
     private final UserService userService;
     private final JwtUtils jwtUtils;
@@ -38,7 +35,8 @@ public class SecurityConfig {
                 csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/users/register", "/api/users/login").permitAll()
+                        .requestMatchers("/api/users/register",
+                                "/api/users/login", "/actuator/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.

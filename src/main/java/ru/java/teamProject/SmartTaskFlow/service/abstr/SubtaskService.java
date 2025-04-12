@@ -2,7 +2,6 @@ package ru.java.teamProject.SmartTaskFlow.service.abstr;
 
 import ru.java.teamProject.SmartTaskFlow.dto.subtask.CreateSubTaskDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.subtask.UpdateSubTaskDTO;
-import ru.java.teamProject.SmartTaskFlow.dto.task.TaskDTO;
 import ru.java.teamProject.SmartTaskFlow.entity.Subtask;
 
 import java.util.List;
@@ -16,7 +15,7 @@ public interface SubtaskService {
     Subtask unArchiveSubtask(Long id);
     List<Subtask> getArchivedSubtasks();
     List<Subtask> getNonArchivedSubtasks();
-    List<Subtask> getSubtaskByTaskId(Long taskId);
+    List<Subtask> getSubtaskByTask(Long taskId);
     List<Subtask> getArchivedSubtaskByTaskId(Long id);
     List<Subtask> getNonArchivedSubtaskByTaskId(Long id);
 
