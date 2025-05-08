@@ -1,4 +1,4 @@
-package ru.java.teamProject.SmartTaskFlow.exception;
+package ru.java.teamProject.SmartTaskFlow.util;
 
 public class JwtAuthenticationException extends RuntimeException {
     public JwtAuthenticationException(String message) {

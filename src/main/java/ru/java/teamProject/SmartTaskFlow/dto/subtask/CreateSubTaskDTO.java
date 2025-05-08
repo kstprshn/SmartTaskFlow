@@ -10,7 +10,7 @@ public class CreateSubTaskDTO {
     @NotBlank
     private String name;
 
-    @NotBlank
+    @NotNull
     private Long taskId;
 
 }

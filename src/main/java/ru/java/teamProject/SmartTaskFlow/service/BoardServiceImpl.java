@@ -38,6 +38,7 @@ public class BoardServiceImpl implements BoardService {
                 .setId(board.getId())
                 .setName(board.getName())
                 .setArchived(board.getArchived())
+                .setDescription(board.getDescription())
                 .setMembers(board.getMembers().stream().map(User::getId).collect(Collectors.toList()));
     }
 

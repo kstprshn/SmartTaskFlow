@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import ru.java.teamProject.SmartTaskFlow.dto.board.BoardDTO;
-import ru.java.teamProject.SmartTaskFlow.dto.board.BoardPreviewDto;
-import ru.java.teamProject.SmartTaskFlow.dto.board.CreateBoardDTO;
-import ru.java.teamProject.SmartTaskFlow.dto.board.UpdateBoardDTO;
+import ru.java.teamProject.SmartTaskFlow.dto.board.*;
 import ru.java.teamProject.SmartTaskFlow.dto.user.UserPreviewDTO;
 import ru.java.teamProject.SmartTaskFlow.entity.Board;
 import ru.java.teamProject.SmartTaskFlow.service.abstr.BoardService;
@@ -50,10 +47,10 @@ public class BoardController {
         return ResponseEntity.ok("Board deleted successfully.");
     }
 
-    @PutMapping("/{boardId} /add-member")
+    @PutMapping("/{boardId}/add-member")
     @Operation(summary = "Adding participants to the board")
-    public ResponseEntity<?> addMemberToBoard(@PathVariable Long boardId, @RequestBody String usernameOrEmail) {
-        return ResponseEntity.ok(boardService.addMember(boardId, usernameOrEmail));
+    public ResponseEntity<?> addMemberToBoard(@PathVariable Long boardId, @RequestBody AddMemberDto addMemberDto) {
+        return ResponseEntity.ok(boardService.addMember(boardId, addMemberDto.getUsernameOrEmail()));
     }
 
     @GetMapping("/userBoards/get")

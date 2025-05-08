@@ -1,4 +1,4 @@
-package ru.java.teamProject.SmartTaskFlow.exception;
+package ru.java.teamProject.SmartTaskFlow.util;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

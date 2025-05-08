@@ -1,5 +1,6 @@
 package ru.java.teamProject.SmartTaskFlow.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,8 @@ import ru.java.teamProject.SmartTaskFlow.service.abstr.CommentService;
 import java.util.List;
 
 @RestController
-//@Tag(name = "Comment Api", description = "Methods for working with Comment API")
+@Tag(name = "Comment Api", description = "Methods for working with Comment API")
+@RequestMapping("/api/comments")
 public class CommentController {
 
     private final CommentService commentService;
@@ -25,19 +27,22 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @GetMapping("/all/{task_id}")
+    @GetMapping("/{task_id}/getAll")
+    @Operation(summary = "Receiving all comments of the task")
     public ResponseEntity<List<CommentResponse>> getAllComments(@PathVariable("task_id") Long task_id) {
         List<CommentResponse> comments = commentService.getAllComments(task_id);
         return ResponseEntity.ok(comments);
     }
 
-    @GetMapping("/{comment_id}")
+    @GetMapping("/{comment_id}/get")
+    @Operation(summary = "Receiving the comment")
     public ResponseEntity<CommentResponse> getCommentById(@PathVariable Long comment_id) {
         CommentResponse comment = commentService.getCommentById(comment_id);
         return ResponseEntity.ok(comment);
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/{id}/edit")
+    @Operation(summary = "Editing the comment")
     public ResponseEntity<CommentResponse> updateComment(
             @PathVariable Long id,
             @RequestBody @Valid CommentUpdateDto request
@@ -46,14 +51,16 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.OK).body(updatedComment);
     }
 
-    @PostMapping("/api/tasks/{taskId}/comments")
+    @PostMapping("/api/tasks/{taskId}/comments/add")
+    @Operation(summary = "Creating the comment")
     public ResponseEntity<Comment> addComment(@PathVariable Long taskId, @RequestBody @Valid CreateCommentDTO request) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(commentService.createComment(taskId, request.getAuthorId(), request.getContent()));
     }
 
-    @DeleteMapping("/{commentId}")
+    @DeleteMapping("/{commentId}/delete")
+    @Operation(summary = "Deleting the comment")
     public ResponseEntity<Void> deleteComment(@PathVariable Long commentId) {
         commentService.deleteComment(commentId);
         return ResponseEntity.noContent().build();

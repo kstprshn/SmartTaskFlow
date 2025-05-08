@@ -1,5 +1,6 @@
 package ru.java.teamProject.SmartTaskFlow.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -31,16 +32,19 @@ public class UserController {
     }
 
     @GetMapping("/{id}/getUser")
+    @Operation(summary = "Receiving the user")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
     @GetMapping("/search")
+    @Operation(summary = "Searching the user")
     public ResponseEntity<UserResponseDTO> getUserByEmailOrUsername(@Valid @RequestBody String identifier) {
         return ResponseEntity.ok(userService.getUserByEmailOrUsername(identifier));
     }
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterUserDTO registerDTO, BindingResult result) {
+    @Operation(summary = "Registering a new user")
+    public ResponseEntity<String> registerUser(@Valid @RequestBody RegisterUserDTO registerDTO, BindingResult result) {
         if (result.hasErrors()) {
             return ResponseEntity.badRequest().body("Invalid data provided.");
         }
@@ -48,10 +52,11 @@ public class UserController {
             return ResponseEntity.badRequest().body("Passwords do not match.");
         }
         userService.registerUser(registerDTO);
-        return ResponseEntity.ok("User registered successfully.");
+        return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully.");
     }
 
     @PostMapping("/login")
+    @Operation(summary = "Log in to the system")
     public ResponseEntity<?> loginUser(@Valid @RequestBody LoginDTO loginDTO) {
         try {
             String token = userService.authenticateUser(loginDTO.getEmail(), loginDTO.getPassword());
@@ -62,18 +67,21 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<?> getUserProfile(Authentication authentication) {
+    @Operation(summary = "Receiving user's profile")
+    public ResponseEntity<UserResponseDTO> getUserProfile(Authentication authentication) {
         return ResponseEntity.ok(userService.getUser(authentication));
     }
 
-    @PutMapping("/profile")
-    public ResponseEntity<?> updateProfile(Authentication authentication, @Valid @RequestBody UpdateProfileDTO profileDTO) {
+    @PutMapping("/profile/edit")
+    @Operation(summary = "Editing the user's profile")
+    public ResponseEntity<String> updateProfile(Authentication authentication, @Valid @RequestBody UpdateProfileDTO profileDTO) {
         userService.updateProfile(authentication, profileDTO);
-        return ResponseEntity.ok("Profile updated successfully.");
+        return ResponseEntity.status(HttpStatus.OK).body("Profile updated successfully.");
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logoutUser(HttpServletRequest request) {
+    @Operation(summary = "Log out of the system")
+    public ResponseEntity<String> logoutUser(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -87,8 +95,9 @@ public class UserController {
 
 
     @DeleteMapping("/{userId}/remove")
-    public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
+    @Operation(summary = "Deleting the user")
+    public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
         userService.deleteUser(userId);
-        return ResponseEntity.ok("User deleted successfully.");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User deleted successfully.");
     }
 }

@@ -8,8 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.java.teamProject.SmartTaskFlow.dto.task.CreateTaskDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.task.TaskDTO;
 import ru.java.teamProject.SmartTaskFlow.dto.task.UpdateTaskDTO;
+import ru.java.teamProject.SmartTaskFlow.dto.user.UserAssignedToTaskEvent;
 import ru.java.teamProject.SmartTaskFlow.dto.user.UserPreviewDTO;
 import ru.java.teamProject.SmartTaskFlow.entity.*;
+import ru.java.teamProject.SmartTaskFlow.producer.TaskEventProducer;
 import ru.java.teamProject.SmartTaskFlow.repository.*;
 import ru.java.teamProject.SmartTaskFlow.service.abstr.TaskService;
 
@@ -26,6 +28,8 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final PanelRepository panelRepository;
     private final UserRepository userRepository;
+    private final TaskEventProducer taskEventProducer;
+
 
     private TaskDTO buildTaskDto(Task task) {
         return new TaskDTO()
@@ -67,6 +71,7 @@ public class TaskServiceImpl implements TaskService {
         task.setPanel(panel);
         task.setStartDate(createTaskDTO.getStartDate());
         task.setEndDate(createTaskDTO.getEndDate());
+
 
         taskRepository.save(task);
         return buildTaskDto(task);
@@ -112,7 +117,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDTO assignUserToTask(Long taskId, Long userId) { //Это точно надо, вопрос для чего
+    public TaskDTO assignUserToTask(Long taskId, Long userId) {
 
         log.info("Assigning user ID: {} to task ID: {}", userId, taskId);
 
@@ -124,6 +129,11 @@ public class TaskServiceImpl implements TaskService {
         task.getAssignees().add(user);
         taskRepository.save(task);
 
+        taskEventProducer.sendUserAssignedEvent(new UserAssignedToTaskEvent(
+                task.getId(),
+                task.getName(),
+                user.getEmail()
+        ));
         return buildTaskDto(task);
     }
 

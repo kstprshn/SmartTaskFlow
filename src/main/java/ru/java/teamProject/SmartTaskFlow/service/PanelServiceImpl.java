@@ -72,30 +72,20 @@ public class PanelServiceImpl implements PanelService {
     @Override
     public List<Panel> getArchivedPanels(Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow();
-        return panelRepository.findAllByBoardAndArchivedFalse(board);
+        return panelRepository.findAllByBoardAndArchivedTrue(board);
     }
 
     @Override
     public List<Panel> getNonArchivedPanels(Long boardId) {
-        Board board = boardRepository.findById(boardId).orElseThrow();
-        return panelRepository.findAllByBoardAndArchivedTrue(board);
+        return panelRepository.findAllByBoardIdAndArchivedFalse(boardId);
     }
+
 
     @Override
     public List<Panel> getPanelsByBoard(Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow();
 
         return board.getPanels();
-    }
-
-    @Override
-    public List<Panel> getArchivedPanels() {
-        return panelRepository.findAllByArchivedTrue();
-    }
-
-    @Override
-    public List<Panel> getNonArchivedPanels() {
-        return panelRepository.findAllByArchivedFalse();
     }
 
     @Override

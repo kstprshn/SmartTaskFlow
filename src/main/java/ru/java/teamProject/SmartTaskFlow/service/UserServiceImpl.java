@@ -94,6 +94,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(email).
                 orElseThrow(() -> new RuntimeException("Invalid email or password"));
         if (passwordEncoder.matches(password, user.getPassword())) {
+            log.info("User with the mail {} log in to the system", user.getEmail());
             return jwtUtils.generateToken(email);
         }
         throw new RuntimeException("Invalid email or password");

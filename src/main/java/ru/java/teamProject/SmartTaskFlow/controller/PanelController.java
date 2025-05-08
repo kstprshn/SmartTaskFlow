@@ -28,13 +28,13 @@ public class PanelController {
     }
 
 
-    @GetMapping("/panels/all")
-    public ResponseEntity<List<Panel>> getAllPanels() {
-        List<Panel> panels = panelService.getNonArchivedPanels();
-        return ResponseEntity.status(HttpStatus.OK).body(panels);
-    }
+//    @GetMapping("/panels/all")
+//    public ResponseEntity<List<Panel>> getAllPanels() {
+//        List<Panel> panels = panelService.getNonArchivedPanels();
+//        return ResponseEntity.status(HttpStatus.OK).body(panels);
+//    }
 
-    @GetMapping("/panels//{panelId}/getPanel")
+    @GetMapping("/panels/{panelId}/getPanel")
     @Operation(summary = "Getting the board panel")
     public ResponseEntity<Panel> getNonArchivedPanelById(@PathVariable Long panelId){
         Panel panelById = panelService.getPanelById(panelId);
@@ -71,10 +71,10 @@ public class PanelController {
     }
 
     //ненужный метод, тк внизу есть правильная версия метода
-    @GetMapping("/panels/archived")
-    public ResponseEntity<List<Panel>> getArchivedPanels() {
-        return ResponseEntity.ok(panelService.getArchivedPanels());
-    }
+//    @GetMapping("/panels/archived")
+//    public ResponseEntity<List<Panel>> getArchivedPanels() {
+//        return ResponseEntity.ok(panelService.getArchivedPanels());
+//    }
 
     @GetMapping("/panels/archived/{id}")
     @Operation(summary = "Getting an archived panel")
@@ -84,7 +84,7 @@ public class PanelController {
 
     // Get /api/board/{boardId}/panels -> Список <дто панелей> на доске
 
-    @PostMapping("/boards/{boardId}/panels")
+    @PostMapping("/boards/{boardId}/panels/add")
     @Operation(summary = "Creating a new panel")
     public ResponseEntity<Panel> createPanel(@RequestBody CreatePanelDTO request, @PathVariable Long boardId) {
         return ResponseEntity
@@ -92,11 +92,11 @@ public class PanelController {
                 .body(panelService.createPanel(boardId, request));
     }
 
-    @GetMapping("/boards/{boardId}/panels")
-    public ResponseEntity<List<Panel>> getAllPanelByBoardId(@PathVariable Long boardId) {
-        List<Panel> panels = panelService.getPanelsByBoard(boardId);
-        return ResponseEntity.status(HttpStatus.OK).body(panels);
-    }
+//    @GetMapping("/boards/{boardId}/panels")
+//    public ResponseEntity<List<Panel>> getAllPanelByBoardId(@PathVariable Long boardId) {
+//        List<Panel> panels = panelService.getPanelsByBoard(boardId);
+//        return ResponseEntity.status(HttpStatus.OK).body(panels);
+//    }
 
     @GetMapping("/boards/{boardId}/panels/archived")
     @Operation(summary = "Getting all archived board panels")
